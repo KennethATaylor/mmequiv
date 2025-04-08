@@ -13,8 +13,8 @@ status](https://www.r-pkg.org/badges/version/mmequiv)](https://CRAN.R-project.or
 
 The goal of `mmequiv` is to provide users access to the NIH HEAL
 Morphine Milligram Equivalent (MME) Online Calculator API directly from
-R. To read more about the calculator, see \[Adams, *et al*.
-(2025)(<https://www.doi.org/10.1097/j.pain.0000000000003529>).
+R. To read more about the calculator, see [Adams, *et al*.
+(2025)](https://www.doi.org/10.1097/j.pain.0000000000003529).
 
 ## Installation
 
