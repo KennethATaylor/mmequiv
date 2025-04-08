@@ -9,6 +9,7 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/mmequiv)](https://CRAN.R-project.org/package=mmequiv)
+[![R-CMD-check](https://github.com/KennethATaylor/mmequiv/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/KennethATaylor/mmequiv/actions/workflows/R-CMD-check.yaml)
 <!-- badges: end -->
 
 The goal of `mmequiv` is to provide users access to the NIH HEAL
