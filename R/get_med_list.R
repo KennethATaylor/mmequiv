@@ -12,8 +12,15 @@ get_med_list <- function() {
   # Base URL for the API
   base_url <- "https://research-mme.wakehealth.edu/api"
 
-  httr2::request(glue::glue("{base_url}/all")) |>
+  req <- httr2::request(glue::glue("{base_url}/all")) |>
     httr2::req_headers(accept = "application/json") |>
-    httr2::req_perform() |>
+    mmequiv_req_retry()
+  
+  print(req)
+  
+  resp <- req |>
+    httr2::req_perform()
+    
+  resp |>
     httr2::resp_body_json(simplifyVector = TRUE)
 }

@@ -4,7 +4,7 @@
 \alias{search_meds}
 \title{Search opioid medication list}
 \usage{
-search_meds(med_name)
+search_meds(med_name = NULL)
 }
 \arguments{
 \item{med_name}{A single string specifying the medication name to search for.}
