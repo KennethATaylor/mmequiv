@@ -12,9 +12,25 @@ with_mock_dir("search_meds", {
   
 })
 
-test_that("Provides error message when med_name is NULL", {
+test_that("Provides correct error messages for invalid `med_name`", {
   expect_snapshot(
     error = TRUE,
     search_meds(med_name = NULL)
   )
+  
+  expect_snapshot(
+    error = TRUE,
+    search_meds(med_name = NULL)
+  )
+  
+  expect_snapshot(
+    error = TRUE,
+    search_meds(med_name = 1)
+  )
+  
+  expect_snapshot(
+    error = TRUE,
+    search_meds(med_name = c("fent", "tram"))
+  )
+  
 })

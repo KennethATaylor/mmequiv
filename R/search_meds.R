@@ -17,6 +17,18 @@ search_meds <- function(med_name = NULL) {
   if (is.null(med_name)) {
     cli::cli_abort("{.arg med_name} must be specified to use {.fn search_meds}")
   }
+  # Check fo valid inputs
+  if (!is.character(med_name)) {
+    cli::cli_abort(
+      c(
+      "{.arg med_name} must be a {.cls character} string",
+      "x" = "You've supplied a {.cls {class(med_name)}} input"
+      )
+    )
+  }
+  if (length(med_name) != 1) {
+    cli::cli_abort("{.arg med_name} only accepts a single string at a time")
+  }
   
   # Base URL for the API
   base_url <- "https://research-mme.wakehealth.edu/api"
