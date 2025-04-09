@@ -4,7 +4,7 @@
 \name{mmequiv-package}
 \alias{mmequiv}
 \alias{mmequiv-package}
-\title{mmequiv: Use the NIH HEAL Morphine Milligram Equivalent (MME) Calculator in R}
+\title{mmequiv: R Interface to the NIH HEAL Morphine Milligram Equivalent API}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
