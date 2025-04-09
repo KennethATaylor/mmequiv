@@ -1,5 +1,5 @@
 Package: mmequiv
-Title: Use the NIH HEAL Morphine Milligram Equivalent (MME) Calculator in R
+Title: R Interface to the NIH HEAL Morphine Milligram Equivalent API
 Version: 0.0.0.9000
 Authors@R: 
     person("Kenneth A.", "Taylor", , "kenneth.taylor.dpt@gmail.com", role = c("aut", "cre"),
