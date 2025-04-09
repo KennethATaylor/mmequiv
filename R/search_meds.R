@@ -11,7 +11,13 @@
 #' @examples
 #' search_meds("oxy")
 #' 
-search_meds <- function(med_name) {
+search_meds <- function(med_name = NULL) {
+  
+  # Check if med_name argument is specified
+  if (is.null(med_name)) {
+    cli::cli_abort("{.arg med_name} must be specified to use {.fn search_meds}")
+  }
+  
   # Base URL for the API
   base_url <- "https://research-mme.wakehealth.edu/api"
 
