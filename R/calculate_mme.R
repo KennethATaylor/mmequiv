@@ -288,10 +288,8 @@ calculate_mme <- function(therapy_days, observation_window_days, medications) {
       ))
   }
   
-  # Load or access valid medication names
-  valid_med_names <- httptest2::with_mock_dir("get_med_list",{
-    get_med_list()$med_name
-  })
+  # Use the internal package data with saved med list
+  valid_med_names <- med_list$med_name
   
   # Validate each medication in the list
   required_fields <- c("medication_name", "dose", "doses_per_24_hours", "days_of_medication")
