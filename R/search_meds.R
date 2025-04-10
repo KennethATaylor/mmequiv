@@ -33,9 +33,14 @@ search_meds <- function(med_name = NULL) {
   # Base URL for the API
   base_url <- "https://research-mme.wakehealth.edu/api"
 
-  httr2::request(glue::glue("{base_url}/by_name")) |>
+  req <- httr2::request(glue::glue("{base_url}/by_name")) |>
     httr2::req_url_query(med_name = med_name) |>
     httr2::req_headers(accept = "application/json") |>
-    httr2::req_perform() |>
+    mmequiv_req_retry()
+  
+  resp <- req |>
+    httr2::req_perform()
+  
+  resp |>
     httr2::resp_body_json(simplifyVector = TRUE)
 }

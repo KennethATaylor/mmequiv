@@ -16,8 +16,6 @@ get_med_list <- function() {
     httr2::req_headers(accept = "application/json") |>
     mmequiv_req_retry()
   
-  print(req)
-  
   resp <- req |>
     httr2::req_perform()
     
