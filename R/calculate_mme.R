@@ -10,7 +10,9 @@
 #' @details
 #' In addition to returning user-specified arguments, `calculate_mme()` also 
 #' returns several other variables mentioned in the **Description** section,
-#' which are described in more detail below. 
+#' which are described in more detail below. See 
+#' [Adams, *et al*. (2025)](https://www.doi.org/10.1097/j.pain.0000000000003529)
+#' for a comprehensive overview.
 #' 
 #' # Prescription-Level
 #' 
@@ -147,9 +149,15 @@
 #' * This calculator sums the 24-hour MME for every prescription, without 
 #'     considering calendar dates.
 #'
-#' @param therapy_days A single positive number indicating the sum of 
-#'     prescription duration (days) for each medication, but _with each calendar 
-#'     day counted only ONCE_. This is the denominator for MME/Day definition 2.
+#' @param therapy_days Either a single positive number or a vector of two 
+#'     positive numbers indicating the sum of prescription duration (days) for 
+#'     each medication, but _with each calendar day counted only ONCE_. When a 
+#'     single number is provided, it is used for the both the "with 
+#'     buprenorphine" and "without buprenorphine" MME calculations; when a 
+#'     vector of 2 numbers is provided (e.g., `c(10, 18)`) then the first and 
+#'     second numbers in the vector are used for the "with buprenorphine" and 
+#'     "without buprenorphine" MME calculations, respectively. This is the 
+#'     denominator for MME/Day definition 2.
 #'     
 #'  * If there is only one prescription _or_ if there is no calendar overlap 
 #'      (i.e., no days on which more than one prescription is active) this 
@@ -157,9 +165,15 @@
 #'      API (`total_days`). 
 #'  * If there are overlapping prescriptions, this is the number of _unique_ 
 #'      calendar days.
-#' @param observation_window_days A single positive number indicating a 
-#'     study-defined fixed observation window of time. Typical choices are 7 day, 
-#'     14 day, 30 day, 90 day. This is the denominator for MME/Day definition 3.
+#' @param observation_window_days Either a single positive number or a vector of
+#'     two positive numbers indicating a study-defined fixed observation window 
+#'     of time. Typical choices are 7 day, 14 day, 30 day, 90 day. When a single 
+#'     number is provided, it is used for the both the "with buprenorphine" and 
+#'     "without buprenorphine" MME calculations; when a vector of 2 numbers is 
+#'     provided (e.g., `c(7, 30)`) then the first and second numbers in the 
+#'     vector are used for the "with buprenorphine" and "without buprenorphine" 
+#'     MME calculations, respectively. This is the denominator for MME/Day 
+#'     definition 3.
 #' @param medications A list of medication definitions. Each element must be a 
 #'     list containing each of the following fields:
 #'     
@@ -206,12 +220,64 @@ calculate_mme <- function(therapy_days, observation_window_days, medications) {
   base_url <- "https://research-mme.wakehealth.edu/api"
   
   # Validate inputs
-  if (!is.numeric(therapy_days) || therapy_days <= 0) {
-    cli::cli_abort("The {.arg therapy_days} argument must be a positive number")
+  # ------ Input validation for therapy_days ------
+  if (is.numeric(therapy_days) && length(therapy_days) == 1) {
+    
+    if (therapy_days <= 0) {
+      cli::cli_abort("The {.arg therapy_days} argument must be a positive number")
+    }
+    
+    # Single value provided - use for both with and without
+    therapy_days_with <- therapy_days
+    therapy_days_without <- therapy_days
+    
+  } else if (is.numeric(therapy_days) && length(therapy_days) == 2) {
+    
+    if (therapy_days[1] <= 0 || therapy_days[2] <= 0) {
+      cli::cli_abort("All values in {.arg therapy_days} must be positive numbers")
+    }
+    
+    # Two values provided - use first for with, second for without
+    therapy_days_with <- therapy_days[1]
+    therapy_days_without <- therapy_days[2]
+    
+  } else {
+    cli::cli_abort(c(
+      "The {.arg therapy_days} argument must be either a single positive number or a vector of 2 positive numbers",
+      "i" = "Use a vector of 2 numbers to set different values for MME calculations 'with buprenorphine' and 'without buprenorphine'",
+      "i" = "Use a single number to apply the same value to both scenarios"
+    ))
   }
-  if (!is.numeric(observation_window_days) || observation_window_days <= 0) {
-    cli::cli_abort("The {.arg observation_window_days} argument must be a positive number")
+  
+  # ------ Input validation for observation_window_days ------
+  if (is.numeric(observation_window_days) && length(observation_window_days) == 1) {
+    
+    if (observation_window_days <= 0) {
+      cli::cli_abort("The {.arg observation_window_days} argument must be a positive number")
+    }
+    
+    # Single value provided - use for both with and without
+    observation_window_days_with <- observation_window_days
+    observation_window_days_without <- observation_window_days
+    
+  } else if (is.numeric(observation_window_days) && length(observation_window_days) == 2) {
+    
+    if (observation_window_days[1] <= 0 || observation_window_days[2] <= 0) {
+      cli::cli_abort("All values in {.arg observation_window_days} must be positive numbers")
+    }
+    
+    # Two values provided - use first for with, second for without
+    observation_window_days_with <- observation_window_days[1]
+    observation_window_days_without <- observation_window_days[2]
+    
+  } else {
+    cli::cli_abort(c(
+      "The {.arg observation_window_days} argument must be either a single positive number or a vector of 2 positive numbers",
+      "i" = "Use a vector of 2 numbers to set different values for MME calculations 'with buprenorphine' and 'without buprenorphine'",
+      "i" = "Use a single number to apply the same value to both scenarios"
+    ))
   }
+  
   if (length(medications) == 0) {
     cli::cli_abort("The {.arg medications} argument must be a non-empty {.cls list}")
   }
@@ -275,12 +341,12 @@ calculate_mme <- function(therapy_days, observation_window_days, medications) {
   # Create the payload structure
   payload <- list(
     therapy_obs_window_with = list(
-      therapy_days = therapy_days,
-      observation_window_days = observation_window_days
+      therapy_days = therapy_days_with,
+      observation_window_days = observation_window_days_with
     ),
     therapy_obs_window_without = list(
-      therapy_days = therapy_days,
-      observation_window_days = observation_window_days
+      therapy_days = therapy_days_without,
+      observation_window_days = observation_window_days_without
     ),
     medications = medications
   )

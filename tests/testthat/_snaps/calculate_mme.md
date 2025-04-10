@@ -1,10 +1,12 @@
-# Provides error messages for invalid therapy_windo_days and observation_window_days arguments
+# Provides error messages for invalid therapy_days and observation_window_days arguments
 
     Code
       calculate_mme("invalid", 5, meds_list)
     Condition
       Error in `calculate_mme()`:
-      ! The `therapy_days` argument must be a positive number
+      ! The `therapy_days` argument must be either a single positive number or a vector of 2 positive numbers
+      i Use a vector of 2 numbers to set different values for MME calculations 'with buprenorphine' and 'without buprenorphine'
+      i Use a single number to apply the same value to both scenarios
 
 ---
 
@@ -28,7 +30,9 @@
       calculate_mme(10, "invalid", meds_list)
     Condition
       Error in `calculate_mme()`:
-      ! The `observation_window_days` argument must be a positive number
+      ! The `observation_window_days` argument must be either a single positive number or a vector of 2 positive numbers
+      i Use a vector of 2 numbers to set different values for MME calculations 'with buprenorphine' and 'without buprenorphine'
+      i Use a single number to apply the same value to both scenarios
 
 ---
 
@@ -45,6 +49,82 @@
     Condition
       Error in `calculate_mme()`:
       ! The `observation_window_days` argument must be a positive number
+
+---
+
+    Code
+      calculate_mme(c(10, 0), 5, meds_list)
+    Condition
+      Error in `calculate_mme()`:
+      ! All values in `therapy_days` must be positive numbers
+
+---
+
+    Code
+      calculate_mme(c(10, -5), 5, meds_list)
+    Condition
+      Error in `calculate_mme()`:
+      ! All values in `therapy_days` must be positive numbers
+
+---
+
+    Code
+      calculate_mme(c(0, 10), 5, meds_list)
+    Condition
+      Error in `calculate_mme()`:
+      ! All values in `therapy_days` must be positive numbers
+
+---
+
+    Code
+      calculate_mme(c(-1, 10), 5, meds_list)
+    Condition
+      Error in `calculate_mme()`:
+      ! All values in `therapy_days` must be positive numbers
+
+---
+
+    Code
+      calculate_mme(10, c(5, 0), meds_list)
+    Condition
+      Error in `calculate_mme()`:
+      ! All values in `observation_window_days` must be positive numbers
+
+---
+
+    Code
+      calculate_mme(10, c(0, 5), meds_list)
+    Condition
+      Error in `calculate_mme()`:
+      ! All values in `observation_window_days` must be positive numbers
+
+---
+
+    Code
+      calculate_mme(10, c(-5, 5), meds_list)
+    Condition
+      Error in `calculate_mme()`:
+      ! All values in `observation_window_days` must be positive numbers
+
+---
+
+    Code
+      calculate_mme(c(10, 20, 30), 5, meds_list)
+    Condition
+      Error in `calculate_mme()`:
+      ! The `therapy_days` argument must be either a single positive number or a vector of 2 positive numbers
+      i Use a vector of 2 numbers to set different values for MME calculations 'with buprenorphine' and 'without buprenorphine'
+      i Use a single number to apply the same value to both scenarios
+
+---
+
+    Code
+      calculate_mme(10, c(5, 10, 15), meds_list)
+    Condition
+      Error in `calculate_mme()`:
+      ! The `observation_window_days` argument must be either a single positive number or a vector of 2 positive numbers
+      i Use a vector of 2 numbers to set different values for MME calculations 'with buprenorphine' and 'without buprenorphine'
+      i Use a single number to apply the same value to both scenarios
 
 # Provides error messages for invalid medications argument
 

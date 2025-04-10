@@ -1,4 +1,4 @@
-test_that("Provides error messages for invalid therapy_windo_days and observation_window_days arguments", {
+test_that("Provides error messages for invalid therapy_days and observation_window_days arguments", {
   meds_list <- list(
     list(
       medication_name = "Buprenorphine buccal film (mcg) buccal",
@@ -43,6 +43,86 @@ test_that("Provides error messages for invalid therapy_windo_days and observatio
     error = TRUE,
     calculate_mme(10, -5, meds_list)
   )
+  
+  # New tests for vectors with 2 values
+  expect_snapshot(
+    error = TRUE,
+    calculate_mme(c(10, 0), 5, meds_list)  # Second value is 0
+  )
+  
+  expect_snapshot(
+    error = TRUE,
+    calculate_mme(c(10, -5), 5, meds_list)  # Second value is negative
+  )
+  
+  expect_snapshot(
+    error = TRUE,
+    calculate_mme(c(0, 10), 5, meds_list)  # First value is 0
+  )
+  
+  expect_snapshot(
+    error = TRUE,
+    calculate_mme(c(-1, 10), 5, meds_list)  # First value is negative
+  )
+  
+  expect_snapshot(
+    error = TRUE,
+    calculate_mme(10, c(5, 0), meds_list)  # Second value is 0
+  )
+  
+  expect_snapshot(
+    error = TRUE,
+    calculate_mme(10, c(0, 5), meds_list)  # First value is 0
+  )
+  
+  expect_snapshot(
+    error = TRUE,
+    calculate_mme(10, c(-5, 5), meds_list)  # First value is negative
+  )
+  
+  expect_snapshot(
+    error = TRUE,
+    calculate_mme(c(10, 20, 30), 5, meds_list)  # Three values instead of 1 or 2
+  )
+  
+  expect_snapshot(
+    error = TRUE,
+    calculate_mme(10, c(5, 10, 15), meds_list)  # Three values instead of 1 or 2
+  )
+})
+
+test_that("Accepts both single values and vectors of two values", {
+  meds_list <- list(
+    list(
+      medication_name = "Buprenorphine buccal film (mcg) buccal",
+      dose = 50,
+      doses_per_24_hours = 2,
+      days_of_medication = 5
+    )
+  )
+  
+  # Mock the API call to avoid actually making requests
+  httptest2::with_mock_dir("calculate_mme", {
+    # Test with single values for both parameters
+    expect_no_error(
+      calculate_mme(10, 5, meds_list)
+    )
+    
+    # Test with vector for therapy_days and single value for observation_window_days
+    expect_no_error(
+      calculate_mme(c(10, 15), 5, meds_list)
+    )
+    
+    # Test with single value for therapy_days and vector for observation_window_days
+    expect_no_error(
+      calculate_mme(10, c(5, 7), meds_list)
+    )
+    
+    # Test with vectors for both parameters
+    expect_no_error(
+      calculate_mme(c(10, 15), c(5, 7), meds_list)
+    )
+  })
 })
 
 test_that("Provides error messages for invalid medications argument", {

@@ -7,9 +7,15 @@
 calculate_mme(therapy_days, observation_window_days, medications)
 }
 \arguments{
-\item{therapy_days}{A single positive number indicating the sum of
-prescription duration (days) for each medication, but \emph{with each calendar
-day counted only ONCE}. This is the denominator for MME/Day definition 2.
+\item{therapy_days}{Either a single positive number or a vector of two
+positive numbers indicating the sum of prescription duration (days) for
+each medication, but \emph{with each calendar day counted only ONCE}. When a
+single number is provided, it is used for the both the "with
+buprenorphine" and "without buprenorphine" MME calculations; when a
+vector of 2 numbers is provided (e.g., \code{c(10, 18)}) then the first and
+second numbers in the vector are used for the "with buprenorphine" and
+"without buprenorphine" MME calculations, respectively. This is the
+denominator for MME/Day definition 2.
 \itemize{
 \item If there is only one prescription \emph{or} if there is no calendar overlap
 (i.e., no days on which more than one prescription is active) this
@@ -19,9 +25,15 @@ API (\code{total_days}).
 calendar days.
 }}
 
-\item{observation_window_days}{A single positive number indicating a
-study-defined fixed observation window of time. Typical choices are 7 day,
-14 day, 30 day, 90 day. This is the denominator for MME/Day definition 3.}
+\item{observation_window_days}{Either a single positive number or a vector of
+two positive numbers indicating a study-defined fixed observation window
+of time. Typical choices are 7 day, 14 day, 30 day, 90 day. When a single
+number is provided, it is used for the both the "with buprenorphine" and
+"without buprenorphine" MME calculations; when a vector of 2 numbers is
+provided (e.g., \code{c(7, 30)}) then the first and second numbers in the
+vector are used for the "with buprenorphine" and "without buprenorphine"
+MME calculations, respectively. This is the denominator for MME/Day
+definition 3.}
 
 \item{medications}{A list of medication definitions. Each element must be a
 list containing each of the following fields:
@@ -54,7 +66,9 @@ opioids with buprenorphine.
 \details{
 In addition to returning user-specified arguments, \code{calculate_mme()} also
 returns several other variables mentioned in the \strong{Description} section,
-which are described in more detail below.
+which are described in more detail below. See
+\href{https://www.doi.org/10.1097/j.pain.0000000000003529}{Adams, \emph{et al}. (2025)}
+for a comprehensive overview.
 }
 \section{Prescription-Level}{
 \strong{Conversion Factor for <\code{medication_name}>} (\code{factor}): the conversion
@@ -86,7 +100,7 @@ the same as the total days supply.
 calendar days.
 }
 
-\strong{Total MME}: The MME for each medication, summed across all prescriptions.
+\strong{Total MME} (\code{total_mme}): The MME for each medication, summed across all prescriptions.
 This is the numerator for MME/Day definitions 1, 2, and 3.
 
 \strong{Total Days Supply} (\code{total_days}): The sum of the entered prescription
