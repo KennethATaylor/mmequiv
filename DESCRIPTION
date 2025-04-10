@@ -9,11 +9,11 @@ License: GPL (>= 3) + file LICENSE
 Imports: 
     cli,
     glue,
+    httptest2 (>= 1.1.0.9000),
     httr2,
     lifecycle,
     rlang
 Suggests: 
-    httptest2 (>= 1.1.0.9000),
     testthat (>= 3.0.0),
     withr
 Config/testthat/edition: 3
