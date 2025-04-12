@@ -6,6 +6,12 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>R Interface to the NIH HEAL Morphine Milligram Equivalent API • mmequiv</title>
+<!-- favicons --><link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png">
+<link rel="apple-touch-icon" type="image/png" sizes="180x180" href="apple-touch-icon.png">
+<link rel="apple-touch-icon" type="image/png" sizes="120x120" href="apple-touch-icon-120x120.png">
+<link rel="apple-touch-icon" type="image/png" sizes="76x76" href="apple-touch-icon-76x76.png">
+<link rel="apple-touch-icon" type="image/png" sizes="60x60" href="apple-touch-icon-60x60.png">
 <script src="deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
@@ -39,6 +45,7 @@
 <li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="search.json">
 </form></li>
+<li class="nav-item"><a class="external-link nav-link" href="https://github.com/KennethATaylor/mmequiv/" aria-label="GitHub"><span class="fa fab fa-github fa-lg"></span></a></li>
       </ul>
 </div>
 
@@ -59,7 +66,7 @@
 <p>This package (just like the online portal for the MME calculator) is intended as a data resource for: research, analytical purposes using claims or dispensing data, and surveillance of population-level medication utilization.</p>
 <p><strong>Important</strong>: Users should be aware of the caveats and limitations of the NIH HEAL MME Online Calculator:</p>
 <blockquote>
-<p>The data collection tool is NOT intended for any clinical decision-making by clinicians while prescribing opioids. The MME conversion factors in this survey DO NOT constitute any clinical guidance for prescribing or recommendations for converting patients from one form of opioid analgesic to another.</p>
+<p>The data collection tool is <em>NOT</em> intended for any clinical decision-making by clinicians while prescribing opioids. The MME conversion factors in this survey <em>DO NOT</em> constitute any clinical guidance for prescribing or recommendations for converting patients from one form of opioid analgesic to another.</p>
 </blockquote>
 <p>To read more about the NIH HEAL MME Calculator, see <a href="https://www.doi.org/10.1097/j.pain.0000000000003529" class="external-link">Adams, <em>et al</em>. (2025)</a>.</p>
 <div class="section level2">
@@ -78,7 +85,14 @@
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span><span class="st">"mmequiv"</span><span class="op">)</span></span></code></pre></div>
 </div>
 </div>
-  </main><aside class="col-md-3"><div class="license">
+  </main><aside class="col-md-3"><div class="links">
+<h2 data-toc-skip>Links</h2>
+<ul class="list-unstyled">
+<li><a href="https://github.com/KennethATaylor/mmequiv/" class="external-link">Browse source code</a></li>
+</ul>
+</div>
+
+<div class="license">
 <h2 data-toc-skip>License</h2>
 <ul class="list-unstyled">
 <li><a href="LICENSE.html">Full license</a></li>
