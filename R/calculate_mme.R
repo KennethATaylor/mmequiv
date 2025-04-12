@@ -2,15 +2,18 @@
 #' 
 #' Calculates the single-day MME and total MME for each individual prescription 
 #'     opioid medication submitted for calculation. Also calculates total MME, 
-#'     total days of supply, and four distinct Total MME/Day calculations from the NIH 
-#'     HEAL Online MME Calculator across all prescription medications for two 
-#'     different medication groupings: 1) opioids without buprenorphine and 2) 
-#'     opioids with buprenorphine.
+#'     total days of supply, and four distinct Total MME/Day calculations from 
+#'     the NIH HEAL Online MME Calculator across all prescription medications 
+#'     for two different medication groupings: 1) opioids without buprenorphine 
+#'     and 2) opioids with buprenorphine.
 #'     
 #' @details
-#' In addition to returning user-specified arguments, `calculate_mme()` also 
-#' returns several other variables mentioned in the **Description** section,
-#' which are described in more detail below. See 
+#' `calculate_mme()` and `calculate_mme_local()` produce the same calculation 
+#' results with and without using the API, respectively. This helps overcome the
+#' online calculator API's rate limit of 50 requests per 15 minutes. In addition 
+#' to returning user-specified arguments, `calculate_mme()` also returns several 
+#' other variables mentioned in the **Description** section, which are described 
+#' in more detail below. Output variable description details are below; see  
 #' [Adams, *et al*. (2025)](https://www.doi.org/10.1097/j.pain.0000000000003529)
 #' for a comprehensive overview.
 #' 
