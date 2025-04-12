@@ -29,7 +29,7 @@ This package (just like the online portal for the MME calculator) is intended as
 
 **Important**: Users should be aware of the caveats and limitations of the NIH HEAL MME Online Calculator:
 
-> The data collection tool is NOT intended for any clinical decision-making by clinicians while prescribing opioids. The MME conversion factors in this survey DO NOT constitute any clinical guidance for prescribing or recommendations for converting patients from one form of opioid analgesic to another.
+> The data collection tool is *NOT* intended for any clinical decision-making by clinicians while prescribing opioids. The MME conversion factors in this survey *DO NOT* constitute any clinical guidance for prescribing or recommendations for converting patients from one form of opioid analgesic to another.
 
 To read more about the NIH HEAL MME Calculator, see [Adams, *et al*. (2025)](https://www.doi.org/10.1097/j.pain.0000000000003529).
 

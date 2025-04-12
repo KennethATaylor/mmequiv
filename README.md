@@ -32,9 +32,9 @@ medication utilization.
 **Important**: Users should be aware of the caveats and limitations of
 the NIH HEAL MME Online Calculator:
 
-> The data collection tool is NOT intended for any clinical
+> The data collection tool is *NOT* intended for any clinical
 > decision-making by clinicians while prescribing opioids. The MME
-> conversion factors in this survey DO NOT constitute any clinical
+> conversion factors in this survey *DO NOT* constitute any clinical
 > guidance for prescribing or recommendations for converting patients
 > from one form of opioid analgesic to another.
 

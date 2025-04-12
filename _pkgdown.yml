@@ -1,4 +1,15 @@
 url: https://kennethataylor.github.io/mmequiv/
+
+home:
+  title: R Interface to the NIH HEAL Morphine Milligram Equivalent API
+
+repo:
+  url:
+    home: https://github.com/KennethATaylor/mmequiv/
+    source: https://github.com/KennethATaylor/mmequiv/blob/HEAD/
+    issue: https://github.com/KennethATaylor/mmequiv/issues/
+    user: https://github.com/
+
 template:
   bootstrap: 5
-
+  
