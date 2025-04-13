@@ -43,14 +43,21 @@
 #' @export
 #' 
 #' @examples
-#' \dontrun{
-#' # Calculate MME with the new 
-#' results <- calculate_mme_df(
-#'   data = patient_data,
+#' # Calculate MME using long-format data
+#' mme <- calculate_mme_df(
+#'   data = opioid_trial,
 #'   therapy_days_without_col = "therapy_days_without",
 #'   observation_days_without_col = "observation_window_days_without"
 #'   )
-#' }
+#'   
+#' head(mme$medications)
+#' 
+#' head(mme$patient_summary_with_buprenorphine)
+#' 
+#' head(mme$patient_summary_without_buprenorphine)
+#'
+#' # Cleanup
+#' rm(mme)
 calculate_mme_df <- function(data, 
                              id_col = "patient_id", 
                              medication_col = "medication_name",

@@ -71,12 +71,19 @@ frames with patient-level MME summaries (one with buprenorphine included and
 one without).
 }
 \examples{
-\dontrun{
-# Calculate MME with the new 
-results <- calculate_mme_df(
-  data = patient_data,
+# Calculate MME using long-format data
+mme <- calculate_mme_df(
+  data = opioid_trial,
   therapy_days_without_col = "therapy_days_without",
   observation_days_without_col = "observation_window_days_without"
   )
-}
+  
+head(mme$medications)
+
+head(mme$patient_summary_with_buprenorphine)
+
+head(mme$patient_summary_without_buprenorphine)
+
+# Cleanup
+rm(mme)
 }
