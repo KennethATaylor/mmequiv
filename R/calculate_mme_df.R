@@ -31,7 +31,7 @@
 #'     window days without buprenorphine (up to one unique value per patient).If 
 #'     `NULL` (default), uses the value from `observation_days_col`.
 #' 
-#' @return A list containing three elements:
+#' @returns A list containing three elements:
 #' 
 #'   * `medications`: The original `data.frame` with added prescription-level 
 #'   MME columns
