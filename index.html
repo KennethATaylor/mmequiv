@@ -60,10 +60,10 @@
 </div>
 <!-- badges: start -->
 
-<p>The goal of <code>mmequiv</code> is to provide users access to the NIH HEAL Morphine Milligram Equivalent Online Calculator API directly from R.</p>
-<p>The NIH HEAL Initiative requires that clinical pain studies monitor use of opioids prescribed for pain management, reported in morphine milligram equivalents (MME). <code>mmequiv</code> passes information about prescription opioids used by study participants, and directly interfaces with the <a href="https://research-mme.wakehealth.edu/" class="external-link">NIH HEAL MME Online Calculator</a>’s API to calculate the MME based on several standardized definitions.</p>
-<p>This package (just like the online portal for the MME calculator) is intended as a data resource for: research, analytical purposes using claims or dispensing data, and surveillance of population-level medication utilization.</p>
-<p><strong>Important</strong>: Users should be aware of the caveats and limitations of the NIH HEAL MME Online Calculator:</p>
+<p>The goal of <code>mmequiv</code> is to provide users the ability to calculate standardized Morphine Milligram Equivalent (MME) doses for prescription opoiod medications for research purposes.</p>
+<p><code>mmequiv</code>’s API wrapper functions takes information about prescription opioids used by study participants and directly interfaces with the <a href="https://research-mme.wakehealth.edu/" class="external-link">NIH HEAL MME Online Calculator</a>’s API from R to calculate MME and daily MME based on several standardized definitions. Because the NIH HEAL MME Online Calculator API has a rate limit of 50 requests per 15 minutes, <code>mmequiv</code> also provides functions that perform the same calculations locally without needing to call the API when the user has large data sets (or when the user may not have access to the internet).</p>
+<p><code>mmequiv</code> is intended for the same purposes as the NIH HEAL MME Online Calculator - as a data resource for: research, analytical purposes using claims or dispensing data, and surveillance of population-level medication utilization.</p>
+<p><strong>Important</strong>: Users should be aware of the caveats and limitations of the NIH HEAL MME Online Calculator, which also apply to <code>mmequiv</code>:</p>
 <blockquote>
 <p>The data collection tool is <em>NOT</em> intended for any clinical decision-making by clinicians while prescribing opioids. The MME conversion factors in this survey <em>DO NOT</em> constitute any clinical guidance for prescribing or recommendations for converting patients from one form of opioid analgesic to another.</p>
 </blockquote>
