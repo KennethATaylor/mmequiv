@@ -14,6 +14,6 @@
 #'   \item{therapy_days}{Sum of prescription duration (days) for across all of the patient's medications, but with each calendar day counted only ONCE}
 #'   \item{observation_window_days}{study-defined fixed observation window of time, applied to all of the patient's medications}
 #'   \item{therapy_days_without}{Sum of prescription duration (days) for across all of the patient's medications (excluding buprenorphine), but with each calendar day counted only ONCE}
-#'   \item{observation_window_days_without}{study-defined fixed observation window of time, applied to all of the patient's medications (excludingbuprenorphine)}
+#'   \item{observation_window_days_without}{study-defined fixed observation window of time, applied to all of the patient's medications (excluding buprenorphine)}
 #' }
 "opioid_trial"
