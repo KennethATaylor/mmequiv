@@ -10,7 +10,8 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 [![CRAN
 status](https://www.r-pkg.org/badges/version/mmequiv)](https://CRAN.R-project.org/package=mmequiv)
 [![R-CMD-check](https://github.com/KennethATaylor/mmequiv/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/KennethATaylor/mmequiv/actions/workflows/R-CMD-check.yaml)
-
+[![Codecov test
+coverage](https://codecov.io/gh/KennethATaylor/mmequiv/graph/badge.svg)](https://app.codecov.io/gh/KennethATaylor/mmequiv)
 <!-- badges: end -->
 
 The goal of `mmequiv` is to provide users access to the NIH HEAL
@@ -42,6 +43,12 @@ To read more about the NIH HEAL MME Calculator, see [Adams, *et al*.
 (2025)](https://www.doi.org/10.1097/j.pain.0000000000003529).
 
 ## Installation
+
+You can install `mmequiv` from CRAN using the following code:
+
+``` r
+install.packages("mmequiv")
+```
 
 You can install the development version of `mmequiv` like so:
 
