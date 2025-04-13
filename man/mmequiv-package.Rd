@@ -14,6 +14,8 @@ Calculate morphine milligram equivalents (MME) for opioid dose comparison using 
 Useful links:
 \itemize{
   \item \url{https://kennethataylor.github.io/mmequiv/}
+  \item \url{https://github.com/KennethATaylor/mmequiv}
+  \item Report bugs at \url{https://github.com/KennethATaylor/mmequiv/issues}
 }
 
 }
