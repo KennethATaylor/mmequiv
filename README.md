@@ -18,23 +18,23 @@ The goal of `mmequiv` is to provide users the ability to calculate
 standardized Morphine Milligram Equivalent (MME) doses for prescription
 opoiod medications for research purposes.
 
-`mmequiv`’s API wrapper functions takes information about prescription
-opioids used by study participants and directly interfaces with the [NIH
-HEAL MME Online Calculator](https://research-mme.wakehealth.edu/)’s API
+`mmequiv`‘s API wrapper functions takes information about prescription
+opioids used by study participants and directly interfaces with the’[NIH
+HEAL MME Online Calculator](https://research-mme.wakehealth.edu/)’ API
 from R to calculate MME and daily MME based on several standardized
-definitions. Because the NIH HEAL MME Online Calculator API has a rate
+definitions. Because the ‘NIH HEAL MME Online Calculator’ API has a rate
 limit of 50 requests per 15 minutes, `mmequiv` also provides functions
 that perform the same calculations locally without needing to call the
 API when the user has large data sets (or when the user may not have
 access to the internet).
 
-`mmequiv` is intended for the same purposes as the NIH HEAL MME Online
-Calculator - as a data resource for: research, analytical purposes using
-claims or dispensing data, and surveillance of population-level
+`mmequiv` is intended for the same purposes as the ‘NIH HEAL MME Online
+Calculator’ - as a data resource for: research, analytical purposes
+using claims or dispensing data, and surveillance of population-level
 medication utilization.
 
 **Important**: Users should be aware of the caveats and limitations of
-the NIH HEAL MME Online Calculator, which also apply to `mmequiv`:
+the ‘NIH HEAL MME Online Calculator’ - these also apply to `mmequiv`:
 
 > The data collection tool is *NOT* intended for any clinical
 > decision-making by clinicians while prescribing opioids. The MME
@@ -42,8 +42,8 @@ the NIH HEAL MME Online Calculator, which also apply to `mmequiv`:
 > guidance for prescribing or recommendations for converting patients
 > from one form of opioid analgesic to another.
 
-To read more about the NIH HEAL MME Calculator, see [Adams, *et al*.
-(2025)](https://www.doi.org/10.1097/j.pain.0000000000003529).
+To read more about the ‘NIH HEAL MME Online Calculator’, see [Adams, *et
+al*. (2025)](https://www.doi.org/10.1097/j.pain.0000000000003529).
 
 ## Installation
 
