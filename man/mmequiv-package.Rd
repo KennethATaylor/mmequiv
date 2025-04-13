@@ -4,11 +4,11 @@
 \name{mmequiv-package}
 \alias{mmequiv}
 \alias{mmequiv-package}
-\title{mmequiv: Calculate Standardized Morphine Milligram Equivalent Doses in R}
+\title{mmequiv: Calculate Standardized Morphine Milligram Equivalent Doses}
 \description{
 \if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
 
-Uses standardized methods to calculate morphine milligram equivalents (MME) for opioid dose comparison. The package includes API wrapper functions to call NIH HEAL MME Online Calulator and local functions that replicate the API's calculations on the user's local machine from the comfort of R.
+Calculate morphine milligram equivalents (MME) for opioid dose comparison using standardized methods. Includes API wrapper functions to call 'NIH HEAL MME Online Calculator' and functions that replicate the API's calculations on the user's local machine from the comfort of 'R'. Creation of the 'NIH HEAL MME Online Calculator' and the MME calculations implemented in this package are described in Adams MCB, Sward KA, Perkins ML, Hurley RW (2025) \doi{10.1097/j.pain.0000000000003529}.
 }
 \seealso{
 Useful links:
