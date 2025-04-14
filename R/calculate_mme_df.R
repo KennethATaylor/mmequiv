@@ -1,13 +1,13 @@
 #' Calculate MME for medication data in long format
 #' 
 #' This function takes medication data in long format (multiple rows per patient 
-#' ID), calculates MME using the local calculation method, and adds 
-#' prescription-level values as new columns. It also returns two additional data 
-#' frames with patient-level MME summaries (one with buprenorphine included and 
-#' one without).
+#' ID), calculates MME using the local calculation method 
+#' ([calculate_mme_local()]), and adds prescription-level values as new columns. 
+#' It also returns two additional data frames with patient-level MME summaries 
+#' (one with buprenorphine included and one without).
 #' 
 #' @param data A `data.frame` or `tibble` in long format with one row per 
-#'     medication per `id_col`
+#'     medication per patient or participant (`id_col`)
 #' @param id_col Name of the column containing patient identifier; default is
 #'     `"patient_id"`
 #' @param medication_col Name of the column containing medication names; default
@@ -20,7 +20,7 @@
 #'     `"days_of_medication"`
 #' @param therapy_days_col Name of the column containing therapy days with 
 #'     buprenorphine (up to one unique value per patient); default is 
-#'     `therapy_days`
+#'     `"therapy_days"`
 #' @param observation_days_col Name of the column containing observation window 
 #'     days with buprenorphine (up to one unique value per patient); default is 
 #'     `"observation_window_days"`
@@ -28,8 +28,8 @@
 #'     without buprenorphine (up to one unique value per patient). If `NULL` 
 #'     (default), uses the value from `therapy_days_col`.
 #' @param observation_days_without_col Name of the column containing observation 
-#'     window days without buprenorphine (up to one unique value per patient).If 
-#'     `NULL` (default), uses the value from `observation_days_col`.
+#'     window days without buprenorphine (up to one unique value per patient). 
+#'     If `NULL` (default), uses the value from `observation_days_col`.
 #' 
 #' @returns A list containing three elements:
 #' 
@@ -42,10 +42,14 @@
 #' 
 #' @export
 #' 
+#' @seealso [calculate_mme_local()]
+#' 
 #' @examples
+#' library(dplyr)
 #' # Calculate MME using long-format data
+#' # Subset of opioid_trial data used for speedier example
 #' mme <- calculate_mme_df(
-#'   data = opioid_trial,
+#'   data = opioid_trial |> dplyr::filter(patient_id %in% sprintf("P%03d", 1:100)),
 #'   therapy_days_without_col = "therapy_days_without",
 #'   observation_days_without_col = "observation_window_days_without"
 #'   )
@@ -58,6 +62,7 @@
 #'
 #' # Cleanup
 #' rm(mme)
+#' 
 calculate_mme_df <- function(data, 
                              id_col = "patient_id", 
                              medication_col = "medication_name",
@@ -69,9 +74,22 @@ calculate_mme_df <- function(data,
                              therapy_days_without_col = NULL,
                              observation_days_without_col = NULL) {
   
+  # Must be tibble
+  if(!tibble::is_tibble(data) | !is.data.frame(data)) {
+    cli::cli_abort(c(
+      "{.arg data} must be a {.cls data.frame} or {.cls tbl_df}",
+      "x" = "{as.character(substitute(data))} is a {.cls {class(data)}}")
+    )
+  }
+  
+  # Ensure data is not empty
+  if(nrow(data) == 0) {
+    cli::cli_abort("{.arg data} must contian at least one row of data")
+  }
+  
   # Validate input data
   if(!id_col %in% names(data)) {
-    cli::cli_abort("{.arg id_col} column '{id_col}' not found in {.arg data}")
+    cli::cli_abort("{.arg id_col} column {.val {id_col}} not found in {.arg data}")
   }
   
   required_cols <- c(medication_col, dose_col, doses_per_day_col, days_col, 
@@ -81,7 +99,7 @@ calculate_mme_df <- function(data,
   
   missing_cols <- setdiff(required_cols, names(data))
   if(length(missing_cols) > 0) {
-    cli::cli_abort("{.arg data} is missing required columns: {missing_cols}")
+    cli::cli_abort("{.data {as.character(substitute(data))}} is missing required columns: {.val {missing_cols}}")
   }
   
   # Initialize result data frame (copy of original)

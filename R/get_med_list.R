@@ -5,6 +5,8 @@
 #'
 #' @export
 #' 
+#' @seealso [search_meds()]
+#' 
 #' @examples
 #' get_med_list()
 #' 

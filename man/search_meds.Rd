@@ -20,3 +20,6 @@ Search opioid medication list
 search_meds("oxy")
 
 }
+\seealso{
+\code{\link[=get_med_list]{get_med_list()}}
+}

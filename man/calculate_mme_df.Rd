@@ -19,7 +19,7 @@ calculate_mme_df(
 }
 \arguments{
 \item{data}{A \code{data.frame} or \code{tibble} in long format with one row per
-medication per \code{id_col}}
+medication per patient or participant (\code{id_col})}
 
 \item{id_col}{Name of the column containing patient identifier; default is
 \code{"patient_id"}}
@@ -38,7 +38,7 @@ is \code{"medication_name"}}
 
 \item{therapy_days_col}{Name of the column containing therapy days with
 buprenorphine (up to one unique value per patient); default is
-\code{therapy_days}}
+\code{"therapy_days"}}
 
 \item{observation_days_col}{Name of the column containing observation window
 days with buprenorphine (up to one unique value per patient); default is
@@ -49,8 +49,8 @@ without buprenorphine (up to one unique value per patient). If \code{NULL}
 (default), uses the value from \code{therapy_days_col}.}
 
 \item{observation_days_without_col}{Name of the column containing observation
-window days without buprenorphine (up to one unique value per patient).If
-\code{NULL} (default), uses the value from \code{observation_days_col}.}
+window days without buprenorphine (up to one unique value per patient).
+If \code{NULL} (default), uses the value from \code{observation_days_col}.}
 }
 \value{
 A list containing three elements:
@@ -65,15 +65,17 @@ excluding buprenorphine
 }
 \description{
 This function takes medication data in long format (multiple rows per patient
-ID), calculates MME using the local calculation method, and adds
-prescription-level values as new columns. It also returns two additional data
-frames with patient-level MME summaries (one with buprenorphine included and
-one without).
+ID), calculates MME using the local calculation method
+(\code{\link[=calculate_mme_local]{calculate_mme_local()}}), and adds prescription-level values as new columns.
+It also returns two additional data frames with patient-level MME summaries
+(one with buprenorphine included and one without).
 }
 \examples{
+library(dplyr)
 # Calculate MME using long-format data
+# Subset of opioid_trial data used for speedier example
 mme <- calculate_mme_df(
-  data = opioid_trial,
+  data = opioid_trial |> dplyr::filter(patient_id \%in\% sprintf("P\%03d", 1:100)),
   therapy_days_without_col = "therapy_days_without",
   observation_days_without_col = "observation_window_days_without"
   )
@@ -86,4 +88,8 @@ head(mme$patient_summary_without_buprenorphine)
 
 # Cleanup
 rm(mme)
+
+}
+\seealso{
+\code{\link[=calculate_mme_local]{calculate_mme_local()}}
 }

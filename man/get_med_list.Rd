@@ -16,3 +16,6 @@ Retrieve full opioid medication list
 get_med_list()
 
 }
+\seealso{
+\code{\link[=search_meds]{search_meds()}}
+}

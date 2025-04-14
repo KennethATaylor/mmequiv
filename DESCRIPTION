@@ -19,8 +19,10 @@ Imports:
     glue,
     httr2,
     lifecycle,
-    rlang
+    rlang,
+    tibble
 Suggests: 
+    dplyr,
     httptest2 (>= 1.1.0),
     spelling,
     testthat (>= 3.0.0),
@@ -31,7 +33,8 @@ Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.2
 URL: https://kennethataylor.github.io/mmequiv/, https://github.com/KennethATaylor/mmequiv
 Depends: 
-    R (>= 3.5)
+    R (>= 4.1.0)
 LazyData: true
 BugReports: https://github.com/KennethATaylor/mmequiv/issues
 Language: en-US
+Config/Needs/website: rmarkdown

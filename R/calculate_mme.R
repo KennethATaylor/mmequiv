@@ -62,7 +62,7 @@
 #'     specified time window (a number of days). The MME/Day definitions specify 
 #'     the number of days:
 #'     
-#' **MME/Day Definition 1 (`mme1`): Total Days Supply.**
+#' **MME/Day Definition 1 (`mme1`): Total Days Supply**
 #' 
 #' MME Definition 1 = Total MME / Total Days Supply time window (sum of entered prescription durations).
 #' 
@@ -80,7 +80,7 @@
 #'     immediate-release and extended release opioids were prescribed 
 #'     concurrently.
 #'     
-#' **MME/Day Definition 2 (`mme2`): On-therapy Days.**
+#' **MME/Day Definition 2 (`mme2`): On-therapy Days**
 #' 
 #' MME Definition 2 = Total MME / On-therapy Days time window (sum of entered 
 #'     prescription durations except each calendar day is counted only ONCE).
@@ -97,7 +97,7 @@
 #'     affords the greatest flexibility to define medication gap periods and 
 #'     leftover/unused medications to improve pharmacoepidemiologic studies.
 #'     
-#' **MME/Day Definition 3 (`mme3`): Fixed Observation Window.**
+#' **MME/Day Definition 3 (`mme3`): Fixed Observation Window**
 #' 
 #' Uses the Total MME study-specified fixed observation window. MME Definition 
 #' 3 = Total MME / Number of days in observation window:
@@ -122,7 +122,7 @@
 #' * This is the definition recommended by the Department of Health and Human 
 #'     Services Office of the Inspector General.
 #'     
-#' **MME/Day Definition 4 (`mme4`): Maximum Daily Dose.** 
+#' **MME/Day Definition 4 (`mme4`): Maximum Daily Dose** 
 #' 
 #' Uses the sum of 24-hour MME for the day with highest opioid exposure. 
 #' 
@@ -183,7 +183,7 @@
 #'     
 #'  * `medication_name`: a string matching an API-accepted medication name and
 #'      its dosage units. To see a full list of API-accepted values, run 
-#'      `get_med_list()`.
+#'      [get_med_list()].
 #'  * `dose`: a positive number indicating the dose of the associated opioid 
 #'      medication listed in the `medication_name` field. Units of `dose` should
 #'      match the units listed in `medication_name`.
@@ -198,6 +198,8 @@
 #'     or if any numeric parameters are not positive numbers.
 #'
 #' @export
+#' 
+#' @seealso [calculate_mme_df()] which this function wraps.
 #' 
 #' @examples
 #' meds_list <- list(

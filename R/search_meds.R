@@ -8,6 +8,8 @@
 #'
 #' @export
 #' 
+#' @seealso [get_med_list()]
+#' 
 #' @examples
 #' search_meds("oxy")
 #' 

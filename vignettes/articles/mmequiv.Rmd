@@ -1,0 +1,228 @@
+---
+title: "Introduction to mmequiv"
+description: >
+  Learn how to get started with the basics of mmequiv.
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to mmequiv}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+httptest2::start_vignette("mmequiv")
+```
+
+## Introduction
+
+`mmequiv` provides tools for calculating standardized Morphine Milligram Equivalent (MME) doses for opioid medications in research settings. This vignette will help you understand the key functions and how to implement them in your research workflow.
+
+```{r setup}
+library(mmequiv)
+```
+
+## Understanding MME Calculations
+
+Calculating MME is a way to compare prescription opioid medication doses by converting different opioid medications to an equivalent morphine dose. This standardization is essential for researchers working with prescription opioid data, particularly in:
+
+* Population-level medication utilization studies
+* Pharmacoepidemiologic research
+* Claims-based analyses
+
+`mmequiv` implements the same calculations used by the [NIH HEAL MME Online Calculator](https://research-mme.wakehealth.edu/), providing researchers with:
+
+* API access to the official calculator
+* Local calculation capabilities for large datasets
+* Several standardized definitions of daily MME
+
+## Finding Available Medications
+
+To see which opioid medications can be used with `mmequiv` for MME calculation, use `get_med_list()`:
+
+``` r
+# Get the full list of supported medications and their conversion factors
+meds <- get_med_list()
+
+# View first few rows
+head(meds)
+```
+
+If you're looking for a specific medication, you can search using a partial name:
+
+``` r
+# Search for medications containing "oxy" in the name
+search_meds("oxy")
+```
+
+## Basic MME Calculation Using the NIH HEAL MME Online Calculator API
+
+The core function in the package is `calculate_mme()`, which calculates MME for one or more opioid medications for a single patient using the NIH HEAL MME Online Calculator API. To use it, you'll need to provide:
+
+1. Total therapy days (with each calendar day counted once)
+2. The observation window in days
+3. A list of medications with dosage information
+
+Here's a simple example:
+
+``` r
+# Create a medications list with two medications
+meds_list <- list(
+  list(
+    medication_name = "Hydrocodone (mg)",
+    dose = 10,
+    doses_per_24_hours = 4,
+    days_of_medication = 7
+  ),
+  list(
+    medication_name = "Oxycodone (mg)",
+    dose = 5,
+    doses_per_24_hours = 2,
+    days_of_medication = 5
+  )
+)
+
+# Calculate MME with 7 therapy days and 14-day observation window
+result <- calculate_mme(therapy_days = 7,
+                        observation_window_days = 14, 
+                        medications = meds_list)
+```
+
+
+## Understanding the Results
+
+Let's examine the results of our calculation:
+
+``` r
+# Extract medication-level results
+medication_results <- result$medications
+print(medication_results)
+
+# Extract MME definitions with buprenorphine
+mme_with_bupr <- result$mme_definitions$with_buprenorphine
+print(mme_with_bupr)
+
+# Extract MME definitions without buprenorphine
+mme_without_bupr <- result$mme_definitions$without_buprenorphine
+print(mme_without_bupr)
+```
+
+The results include:
+
+1. **Patient Medication-level calculations**: Each medication's conversion factor, MME (total), and single-day MME.
+
+2. **Patient-level summary calculations**:
+* `total_mme`: Sum of MME across all the patient's prescriptions
+* `total_days`: Sum of days across all the patient's prescriptions
+* Four different MME/day definitions:
+  * `mme1`: Total MME / Total Days Supply
+  * `mme2`: Total MME / On-therapy Days 
+  * `mme3`: Total MME / Observation Window Days
+  * `mme4`: Maximum Daily Dose (sum of single-day MME for all the patient's prescriptions)
+
+## When to Use Local Calculations
+
+The NIH HEAL MME Online Calculator currently has a rate limit of 50 requests per 15 minutes, where each calculation request is unique to a patient. For datasets with substantially more than 50 patients, you can use `calculate_mme_local()` which performs the exact same calculations locally:
+
+``` r
+# Use local calculation (no API call)
+local_result <- calculate_mme_local(therapy_days = 7, 
+                                    observation_window_days = 14, 
+                                    medications = meds_list)
+```
+
+The inputs and outputs are identical to `calculate_mme()`, but no external API calls are made.
+
+## Working with Data Frames
+
+For real-world data analysis, you'll often have medication data in a data frame rather than a list. As an example, `mmequiv` contains a synthetic dataset called `opioid_trial` that contains one row per opioid prescription for 1000 fake patients (long format) with each row containing the components required for MME calculation. For large datasets that would take an annoyingly long time to calculate using the API (recall the API rate limit of 50 patients per 15 minutes), we can use `calculate_mme_df()`:
+
+``` r
+# View the example dataset structure
+head(opioid_trial)
+
+# Calculate MME from a data frame
+mme_df_result <- calculate_mme_df(
+  data = opioid_trial,
+  id_col = "patient_id",
+  medication_col = "medication_name", 
+  dose_col = "dose",
+  doses_per_day_col = "doses_per_24_hours",
+  days_col = "days_of_medication",
+  therapy_days_col = "therapy_days",
+  observation_days_col = "observation_window_days",
+  therapy_days_without_col = "therapy_days_without",
+  observation_days_without_col = "observation_window_days_without"
+)
+```
+
+The results include:
+
+``` r
+# Original data with MME calculations added
+head(mme_df_result$medications)
+
+# Patient-level summaries with buprenorphine
+head(mme_df_result$patient_summary_with_buprenorphine)
+
+# Patient-level summaries without buprenorphine
+head(mme_df_result$patient_summary_without_buprenorphine)
+```
+
+## Choosing the Right MME Definition
+
+The package calculates four different MME/day definitions, each suited for different research questions:
+
+1. **MME Definition 1 (`mme1`)**: Total MME divided by Total Days Supply
+
+    * Best suited for studies of immediate-release opioids prescribed for short, discrete periods
+
+
+2. **MME Definition 2 (`mme2`)**: Total MME divided by On-therapy Days
+
+    * Ideal for studies of dose-dependent adverse effects (e.g., opioid-induced constipation)
+  
+    * Useful for patients with opioid tolerance or stable on opioids
+
+3. **MME Definition 3 (`mme3`)**: Total MME divided by Fixed Observation Window
+
+    * Recommended by the Department of Health and Human Services Office of the Inspector General
+    * Suitable for studies with a known duration of risk (e.g., opioid use disorder incidence)
+    * Useful when prescriptions are filled at irregular intervals (PRN basis)
+
+
+4. **MME Definition 4 (`mme4`)**: Maximum Daily Dose
+
+    * Appropriate for patients with no opioid tolerance or with comorbidities for respiratory depression
+    * Used in the CDC Opioid Guideline mobile app
+    * Best for immediate dose-dependent toxic effects (e.g., respiratory depression)
+
+Choose the definition that best aligns with your research question and population.
+
+## Important Caveats
+
+Remember that `mmequiv`, like the NIH HEAL MME Online Calculator, is _only_ intended for:
+
+* Research
+* Analytical purposes using claims or dispensing data
+* Surveillance of population-level medication utilization
+
+The calculations are **_not_** intended for:
+
+* Clinical decision-making while prescribing opioids
+* Clinical guidance for prescribing
+* Recommendations for converting patients from one opioid analgesic to another
+
+## Conclusion
+
+`mmequiv` provides a comprehensive set of tools for calculating standardized MME in research settings. Whether you're working with small samples through the calling the NIH HEAL MME Online Calculator API or large datasets with local calculations, the package offers consistent, validated methods to support your research.
+
+For more information on the methodology behind these calculations, refer to [Adams, *et al*. (2025)](https://www.doi.org/10.1097/j.pain.0000000000003529).
+
+
+```{r, include = FALSE}
+httptest2::end_vignette()
+```

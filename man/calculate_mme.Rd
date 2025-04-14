@@ -43,7 +43,7 @@ list containing each of the following fields:
 \itemize{
 \item \code{medication_name}: a string matching an API-accepted medication name and
 its dosage units. To see a full list of API-accepted values, run
-\code{get_med_list()}.
+\code{\link[=get_med_list]{get_med_list()}}.
 \item \code{dose}: a positive number indicating the dose of the associated opioid
 medication listed in the \code{medication_name} field. Units of \code{dose} should
 match the units listed in \code{medication_name}.
@@ -120,7 +120,7 @@ MME/Day is an aggregate measure, calculating the total MME divided by a
 specified time window (a number of days). The MME/Day definitions specify
 the number of days:
 
-\strong{MME/Day Definition 1 (\code{mme1}): Total Days Supply.}
+\strong{MME/Day Definition 1 (\code{mme1}): Total Days Supply}
 
 MME Definition 1 = Total MME / Total Days Supply time window (sum of entered prescription durations).
 
@@ -138,7 +138,7 @@ immediate-release and extended release opioids were prescribed
 concurrently.
 }
 
-\strong{MME/Day Definition 2 (\code{mme2}): On-therapy Days.}
+\strong{MME/Day Definition 2 (\code{mme2}): On-therapy Days}
 
 MME Definition 2 = Total MME / On-therapy Days time window (sum of entered
 prescription durations except each calendar day is counted only ONCE).
@@ -156,7 +156,7 @@ affords the greatest flexibility to define medication gap periods and
 leftover/unused medications to improve pharmacoepidemiologic studies.
 }
 
-\strong{MME/Day Definition 3 (\code{mme3}): Fixed Observation Window.}
+\strong{MME/Day Definition 3 (\code{mme3}): Fixed Observation Window}
 
 Uses the Total MME study-specified fixed observation window. MME Definition
 3 = Total MME / Number of days in observation window:
@@ -181,7 +181,7 @@ for time-varying adjustment.
 Services Office of the Inspector General.
 }
 
-\strong{MME/Day Definition 4 (\code{mme4}): Maximum Daily Dose.}
+\strong{MME/Day Definition 4 (\code{mme4}): Maximum Daily Dose}
 
 Uses the sum of 24-hour MME for the day with highest opioid exposure.
 
@@ -235,4 +235,7 @@ calculate_mme(10, 5, meds_list)
 
 # Clean up meds_list
 rm(meds_list)
+}
+\seealso{
+\code{\link[=calculate_mme_df]{calculate_mme_df()}} which this function wraps.
 }
