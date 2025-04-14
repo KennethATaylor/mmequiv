@@ -6,7 +6,7 @@
 #' @format ## `opioid_trial`
 #' A data frame with 2,371 rows and 9 columns:
 #' \describe{
-#'   \item{patient_id}{Patient identifier}
+#'   \item{patient_id}{Patient identifier; includes 1000 separate patients}
 #'   \item{medication_name}{Medication names of prescription opioids used by the patient}
 #'   \item{dose}{Dosage of the medication}
 #'   \item{doses_per_24_hours}{Number of daily doses for the medication}
