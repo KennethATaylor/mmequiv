@@ -1,3 +1,3 @@
-# mmequiv (development version)
+# mmequiv 0.1.0
 
 * Initial CRAN submission.
