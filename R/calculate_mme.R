@@ -10,10 +10,11 @@
 #' @details
 #' `calculate_mme()` and `calculate_mme_local()` produce the same calculation 
 #' results with and without using the API, respectively. This helps overcome the
-#' online calculator API's rate limit of 50 requests per 15 minutes. In addition 
-#' to returning user-specified arguments, `calculate_mme()` also returns several 
-#' other variables mentioned in the **Description** section, which are described 
-#' in more detail below. Output variable description details are below; see  
+#' online calculator API rate limit of 50 (patient-level) requests per 15 
+#' minutes. In addition to returning user-specified arguments, `calculate_mme()` 
+#' also returns several  other variables mentioned in the **Description** 
+#' section, which are described in more detail below. Output variable 
+#' description details are below; see 
 #' [Adams, *et al*. (2025)](https://www.doi.org/10.1097/j.pain.0000000000003529)
 #' for a comprehensive overview.
 #' 
@@ -63,7 +64,7 @@
 #'     
 #' **MME/Day Definition 1 (`mme1`): Total Days Supply.**
 #' 
-#' MME Defintion 1 = Total MME / Total Days Supply time window (sum of entered prescription durations).
+#' MME Definition 1 = Total MME / Total Days Supply time window (sum of entered prescription durations).
 #' 
 #' ```r
 #' mme1 = total_mme / total_days
@@ -96,7 +97,7 @@
 #'     affords the greatest flexibility to define medication gap periods and 
 #'     leftover/unused medications to improve pharmacoepidemiologic studies.
 #'     
-#' **MME/Day Defnition 3 (`mme3`): Fixed Observation Window.**
+#' **MME/Day Definition 3 (`mme3`): Fixed Observation Window.**
 #' 
 #' Uses the Total MME study-specified fixed observation window. MME Definition 
 #' 3 = Total MME / Number of days in observation window:
@@ -111,7 +112,7 @@
 #'     or suspected duration of risk during which adverse events are expected 
 #'     to occur, such as incidence of opioid use disorder. This definition may 
 #'     be useful when prescriptions are filled at irregular time intervals on a 
-#'     as needed basis (pro re nata, prn).
+#'     as needed basis (_pro re nata_, PRN).
 #' * Identified challenge with this definition: The definition consistently had 
 #'     the lowest milligrams per day for immediate-release opioids. It is the 
 #'     most robust to misspecification, amenable to transformations, and has 
@@ -139,7 +140,7 @@
 #'     depression.
 #' * Identified challenged with this definition: This definition may have 
 #'     limited use if it includes opioids where fatal toxicity does not involve 
-#'     respiratory depression (e.g., tramadol) or have atypical mu-opioid 
+#'     respiratory depression (e.g., tramadol) or have atypical _mu_-opioid 
 #'     receptor agonism (e.g., tapentadol, buprenorphine).
 #' * The definition assumes uniform risk of adverse outcomes regardless of time 
 #'     on-therapy. More so than the others, this definition is prone to 

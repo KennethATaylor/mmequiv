@@ -16,7 +16,7 @@ coverage](https://codecov.io/gh/KennethATaylor/mmequiv/graph/badge.svg)](https:/
 
 The goal of `mmequiv` is to provide users the ability to calculate
 standardized Morphine Milligram Equivalent (MME) doses for prescription
-opoiod medications for research purposes.
+opioid medications for research purposes.
 
 `mmequiv`‘s API wrapper functions takes information about prescription
 opioids used by study participants and directly interfaces with the
