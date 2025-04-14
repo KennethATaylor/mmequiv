@@ -25,7 +25,8 @@ and 2) opioids with buprenorphine."><meta property="og:image" content="https://k
     </button>
 
     <div id="navbar" class="collapse navbar-collapse ms-3">
-      <ul class="navbar-nav me-auto"><li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
+      <ul class="navbar-nav me-auto"><li class="nav-item"><a class="nav-link" href="../articles/mmequiv.html">Get started</a></li>
+<li class="active nav-item"><a class="nav-link" href="../reference/index.html">Reference</a></li>
 <li class="nav-item"><a class="nav-link" href="../news/index.html">Changelog</a></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -117,10 +118,11 @@ or if any numeric parameters are not positive numbers.</p>
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
     <p><code>calculate_mme()</code> and <code>calculate_mme_local()</code> produce the same calculation
 results with and without using the API, respectively. This helps overcome the
-online calculator API's rate limit of 50 requests per 15 minutes. In addition
-to returning user-specified arguments, <code>calculate_mme()</code> also returns several
-other variables mentioned in the <strong>Description</strong> section, which are described
-in more detail below. Output variable description details are below; see
+online calculator API rate limit of 50 (patient-level) requests per 15
+minutes. In addition to returning user-specified arguments, <code>calculate_mme()</code>
+also returns several  other variables mentioned in the <strong>Description</strong>
+section, which are described in more detail below. Output variable
+description details are below; see
 <a href="https://www.doi.org/10.1097/j.pain.0000000000003529" class="external-link">Adams, <em>et al</em>. (2025)</a>
 for a comprehensive overview.</p>
     </div>
@@ -160,8 +162,8 @@ denominator for MME/Day definition 1.</p><div class="section">
 <p>MME/Day is an aggregate measure, calculating the total MME divided by a
 specified time window (a number of days). The MME/Day definitions specify
 the number of days:</p>
-<p><strong>MME/Day Definition 1 (<code>mme1</code>): Total Days Supply.</strong></p>
-<p>MME Defintion 1 = Total MME / Total Days Supply time window (sum of entered prescription durations).</p>
+<p><strong>MME/Day Definition 1 (<code>mme1</code>): Total Days Supply</strong></p>
+<p>MME Definition 1 = Total MME / Total Days Supply time window (sum of entered prescription durations).</p>
 <p></p><div class="sourceCode r"><pre><code><span><span class="va">mme1</span> <span class="op">=</span> <span class="va">total_mme</span> <span class="op">/</span> <span class="va">total_days</span></span></code></pre><p></p></div><ul><li><p>Note that the same calendar day may contribute multiple times, if
 overlapping prescriptions.</p></li>
 <li><p>Reason to select this definition: This is the least complicated
@@ -171,7 +173,7 @@ prescribed for short discrete times.</p></li>
 MME per day when overlapping prescriptions were present or when
 immediate-release and extended release opioids were prescribed
 concurrently.</p></li>
-</ul><p><strong>MME/Day Definition 2 (<code>mme2</code>): On-therapy Days.</strong></p>
+</ul><p><strong>MME/Day Definition 2 (<code>mme2</code>): On-therapy Days</strong></p>
 <p>MME Definition 2 = Total MME / On-therapy Days time window (sum of entered
 prescription durations except each calendar day is counted only ONCE).</p>
 <p></p><div class="sourceCode r"><pre><code><span><span class="va">mme2</span> <span class="op">=</span> <span class="va">total_mme</span> <span class="op">/</span> <span class="va">therapy_days</span></span></code></pre><p></p></div><ul><li><p>Note - On-therapy Days unique calendar days.</p></li>
@@ -182,7 +184,7 @@ been stable on opioids.</p></li>
 <li><p>Identified challenge with this definition: The metric is time-varying and
 affords the greatest flexibility to define medication gap periods and
 leftover/unused medications to improve pharmacoepidemiologic studies.</p></li>
-</ul><p><strong>MME/Day Defnition 3 (<code>mme3</code>): Fixed Observation Window.</strong></p>
+</ul><p><strong>MME/Day Definition 3 (<code>mme3</code>): Fixed Observation Window</strong></p>
 <p>Uses the Total MME study-specified fixed observation window. MME Definition
 3 = Total MME / Number of days in observation window:</p>
 <p></p><div class="sourceCode r"><pre><code><span><span class="va">mme3</span> <span class="op">=</span> <span class="va">total_mme</span> <span class="op">/</span> <span class="va">observation_window_days</span></span></code></pre><p></p></div><ul><li><p>If this definition is selected, it is important to report on the duration
@@ -191,7 +193,7 @@ of the fixed window.</p></li>
 or suspected duration of risk during which adverse events are expected
 to occur, such as incidence of opioid use disorder. This definition may
 be useful when prescriptions are filled at irregular time intervals on a
-as needed basis (pro re nata, prn).</p></li>
+as needed basis (<em>pro re nata</em>, PRN).</p></li>
 <li><p>Identified challenge with this definition: The definition consistently had
 the lowest milligrams per day for immediate-release opioids. It is the
 most robust to misspecification, amenable to transformations, and has
@@ -200,7 +202,7 @@ it assumes uniform exposure/risk within a window, there is less scope
 for time-varying adjustment.</p></li>
 <li><p>This is the definition recommended by the Department of Health and Human
 Services Office of the Inspector General.</p></li>
-</ul><p><strong>MME/Day Definition 4 (<code>mme4</code>): Maximum Daily Dose.</strong></p>
+</ul><p><strong>MME/Day Definition 4 (<code>mme4</code>): Maximum Daily Dose</strong></p>
 <p>Uses the sum of 24-hour MME for the day with highest opioid exposure.</p>
 <p>MME Definition 4 = Drug 1 (dose (mg) x # of doses per day) x conversion
 factor + Drug 2 (dose (mg) x # of doses per day) x conversion factor + ...</p>
@@ -212,7 +214,7 @@ suited for immediate dose-dependent toxic effects, such as respiratory
 depression.</p></li>
 <li><p>Identified challenged with this definition: This definition may have
 limited use if it includes opioids where fatal toxicity does not involve
-respiratory depression (e.g., tramadol) or have atypical mu-opioid
+respiratory depression (e.g., tramadol) or have atypical <em>mu</em>-opioid
 receptor agonism (e.g., tapentadol, buprenorphine).</p></li>
 <li><p>The definition assumes uniform risk of adverse outcomes regardless of time
 on-therapy. More so than the others, this definition is prone to
@@ -226,6 +228,10 @@ that is significantly higher.</p></li>
 considering calendar dates.</p></li>
 </ul></div>
 
+    </div>
+    <div class="section level2">
+    <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
+    <div class="dont-index"><p><code><a href="calculate_mme_df.html">calculate_mme_df()</a></code> which this function wraps.</p></div>
     </div>
 
     <div class="section level2">
