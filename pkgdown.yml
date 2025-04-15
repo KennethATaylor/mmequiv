@@ -3,7 +3,7 @@ pkgdown: 2.1.1
 pkgdown_sha: ~
 articles:
   articles/mmequiv: mmequiv.html
-last_built: 2025-04-15T11:37Z
+last_built: 2025-04-15T12:04Z
 urls:
   reference: https://kennethataylor.github.io/mmequiv/reference
   article: https://kennethataylor.github.io/mmequiv/articles
