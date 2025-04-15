@@ -13,7 +13,7 @@ Description: Calculate morphine milligram equivalents (MME) for opioid dose
     Creation of the 'NIH HEAL MME Online Calculator' and the MME calculations 
     implemented in this package are described in Adams MCB, Sward KA, Perkins 
     ML, Hurley RW (2025) <doi:10.1097/j.pain.0000000000003529>.
-License: GPL (>= 3) + file LICENSE
+License: GPL (>= 3)
 Imports: 
     cli,
     glue,
