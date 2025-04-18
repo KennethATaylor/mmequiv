@@ -469,6 +469,5 @@
       calculate_mme_df(data = test_data)
     Condition
       Error in `calculate_mme_df()`:
-      ! `data` must be a <data.frame> or <tbl_df>
-      x test_data is a <data.frame>
+      ! `data` must contian at least one row of data
 

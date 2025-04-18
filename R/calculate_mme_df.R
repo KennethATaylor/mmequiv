@@ -74,8 +74,8 @@ calculate_mme_df <- function(data,
                              therapy_days_without_col = NULL,
                              observation_days_without_col = NULL) {
   
-  # Must be tibble
-  if(!tibble::is_tibble(data) | !is.data.frame(data)) {
+  # Must be tibble or data.frame
+  if(!inherits(data, "data.frame")) {
     cli::cli_abort(c(
       "{.arg data} must be a {.cls data.frame} or {.cls tbl_df}",
       "x" = "{as.character(substitute(data))} is a {.cls {class(data)}}")
