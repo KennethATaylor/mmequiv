@@ -43,7 +43,7 @@ Calculating MME is a way to compare prescription opioid medication doses by conv
 
 To see which opioid medications can be used with `mmequiv` for MME calculation, use `get_med_list()`:
 
-``` r
+``` {r}
 # Get the full list of supported medications and their conversion factors
 meds <- get_med_list()
 
@@ -53,7 +53,7 @@ head(meds)
 
 If you're looking for a specific medication, you can search using a partial name:
 
-``` r
+``` {r}
 # Search for medications containing "oxy" in the name
 search_meds("oxy")
 ```
@@ -68,7 +68,7 @@ The core function in the package is `calculate_mme()`, which calculates MME for 
 
 Here's a simple example:
 
-``` r
+``` {r}
 # Create a medications list with two medications
 meds_list <- list(
   list(
@@ -86,9 +86,11 @@ meds_list <- list(
 )
 
 # Calculate MME with 7 therapy days and 14-day observation window
-result <- calculate_mme(therapy_days = 7,
-                        observation_window_days = 14, 
-                        medications = meds_list)
+result <- calculate_mme(
+  therapy_days = 7,
+  observation_window_days = 14, 
+  medications = meds_list
+  )
 ```
 
 
@@ -96,7 +98,7 @@ result <- calculate_mme(therapy_days = 7,
 
 Let's examine the results of our calculation:
 
-``` r
+``` {r}
 # Extract medication-level results
 medication_results <- result$medications
 print(medication_results)
@@ -125,22 +127,25 @@ The results include:
 
 ## When to Use Local Calculations
 
-The NIH HEAL MME Online Calculator currently has a rate limit of 50 requests per 15 minutes, where each calculation request is unique to a patient. For datasets with substantially more than 50 patients, you can use `calculate_mme_local()` which performs the exact same calculations locally:
+The NIH HEAL MME Online Calculator currently has a rate limit of 50 requests per 15 minutes, where each calculation request is unique to a patient. For datasets with substantially more than 50 patients, you can use `calculate_mme()` with the `use_api` argument set to `FALSE`, which performs the exact same calculations locally:
 
-``` r
+``` {r} 
 # Use local calculation (no API call)
-local_result <- calculate_mme_local(therapy_days = 7, 
-                                    observation_window_days = 14, 
-                                    medications = meds_list)
+calculate_mme(
+  therapy_days = 7, 
+  observation_window_days = 14,
+  medications = meds_list,
+  use_api = FALSE
+  )
 ```
 
-The inputs and outputs are identical to `calculate_mme()`, but no external API calls are made.
+The inputs and outputs are identical to `calculate_mme()` with `use_api = TRUE` (the default), but no external API calls are made.
 
 ## Working with Data Frames
 
 For real-world data analysis, you'll often have medication data in a data frame rather than a list. As an example, `mmequiv` contains a synthetic dataset called `opioid_trial` that contains one row per opioid prescription for 1000 fake patients (long format) with each row containing the components required for MME calculation. For large datasets that would take an annoyingly long time to calculate using the API (recall the API rate limit of 50 patients per 15 minutes), we can use `calculate_mme_df()`:
 
-``` r
+``` {r}
 # View the example dataset structure
 head(opioid_trial)
 
@@ -161,7 +166,7 @@ mme_df_result <- calculate_mme_df(
 
 The results include:
 
-``` r
+``` {r}
 # Original data with MME calculations added
 head(mme_df_result$medications)
 

@@ -1,4 +1,27 @@
+test_that("calculate_mme_local() is deprecated", {
+  meds_list <- list(
+    list(
+      medication_name = "Buprenorphine buccal film (mcg) buccal",
+      dose = 50,
+      doses_per_24_hours = 2,
+      days_of_medication = 5
+    ),
+    list(
+      medication_name = "Hydrocodone (mg)",
+      dose = 75,
+      doses_per_24_hours = 3,
+      days_of_medication = 10
+    )
+  )
+  
+  expect_snapshot(
+    calculate_mme_local(10, 5, meds_list)
+  )
+})
+
 test_that("Local MME calculation matches API calculation", {
+  withr::local_options(lifecycle_verbosity = "quiet")
+  
   # Define test input
   meds_list <- list(
     list(
@@ -83,6 +106,8 @@ test_that("Local MME calculation matches API calculation", {
 })
 
 test_that("Local MME calculation handles edge cases correctly", {
+  withr::local_options(lifecycle_verbosity = "quiet")
+  
   # Test with a single medication
   single_med <- list(
     list(
@@ -130,6 +155,8 @@ test_that("Local MME calculation handles edge cases correctly", {
 })
 
 test_that("Provides error messages for invalid therapy_days and observation_window_days arguments", {
+  withr::local_options(lifecycle_verbosity = "quiet")
+  
   meds_list <- list(
     list(
       medication_name = "Buprenorphine buccal film (mcg) buccal",
@@ -223,6 +250,8 @@ test_that("Provides error messages for invalid therapy_days and observation_wind
 })
 
 test_that("Accepts both single values and vectors of two values", {
+  withr::local_options(lifecycle_verbosity = "quiet")
+  
   meds_list <- list(
     list(
       medication_name = "Buprenorphine buccal film (mcg) buccal",
@@ -257,6 +286,8 @@ test_that("Accepts both single values and vectors of two values", {
 })
 
 test_that("Provides error messages for invalid medications argument", {
+  withr::local_options(lifecycle_verbosity = "quiet")
+  
   expect_snapshot(
     error = TRUE,
     calculate_mme_local(10, 5, "not_a_list")
@@ -353,6 +384,8 @@ test_that("Provides error messages for invalid medications argument", {
 })
 
 test_that("Validates medication names against known list", {
+  withr::local_options(lifecycle_verbosity = "quiet")
+  
   # This will use the mocked data from httptest2
   valid_med_names <- httptest2::with_mock_dir("get_med_list", {
     get_med_list()$med_name

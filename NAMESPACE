@@ -2,6 +2,7 @@
 
 export(calculate_mme)
 export(calculate_mme_df)
+export(calculate_mme_local)
 export(get_med_list)
 export(search_meds)
 import(rlang)
