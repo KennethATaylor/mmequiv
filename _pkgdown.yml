@@ -12,3 +12,18 @@ repo:
 
 template:
   bootstrap: 5
+
+reference:
+  - title: Morphine Milligram Equivalent (MME) Calculation
+  - contents:
+      - calculate_mme.list
+      - calculate_mme.data.frame
+
+  - title: Other Functions
+  - subtitle: Get List of or Search for Opioids Compatible with Package
+  - contents:
+      - get_med_list
+      - search_meds
+  - subtitle: Data
+  - contents:
+      - opioid_trial

@@ -64,6 +64,8 @@ excluding buprenorphine
 }
 }
 \description{
+\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#deprecated}{\figure{lifecycle-deprecated.svg}{options: alt='[Deprecated]'}}}{\strong{[Deprecated]}}
+
 This function takes medication data in long format (multiple rows per patient
 ID), calculates MME using the local calculation method
 (\code{\link[=calculate_mme_local]{calculate_mme_local()}}), and adds prescription-level values as new columns.
@@ -76,6 +78,12 @@ library(dplyr)
 # Subset of opioid_trial data used for speedier example
 mme <- calculate_mme_df(
   data = opioid_trial |> dplyr::filter(patient_id \%in\% sprintf("P\%03d", 1:100)),
+  therapy_days_without_col = "therapy_days_without",
+  observation_days_without_col = "observation_window_days_without"
+  )
+# -> 
+mme <- calculate_mme(
+  x = opioid_trial |> dplyr::filter(patient_id \%in\% sprintf("P\%03d", 1:100)),
   therapy_days_without_col = "therapy_days_without",
   observation_days_without_col = "observation_window_days_without"
   )
@@ -93,3 +101,4 @@ rm(mme)
 \seealso{
 \code{\link[=calculate_mme_local]{calculate_mme_local()}}
 }
+\keyword{internal}

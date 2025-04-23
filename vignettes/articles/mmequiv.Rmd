@@ -14,7 +14,6 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
 )
-httptest2::start_vignette("mmequiv")
 ```
 
 ## Introduction
@@ -23,6 +22,10 @@ httptest2::start_vignette("mmequiv")
 
 ```{r setup}
 library(mmequiv)
+```
+
+```{r, include = FALSE}
+httptest2::start_vignette("mmequiv")
 ```
 
 ## Understanding MME Calculations
@@ -60,11 +63,11 @@ search_meds("oxy")
 
 ## Basic MME Calculation Using the NIH HEAL MME Online Calculator API
 
-The core function in the package is `calculate_mme()`, which calculates MME for one or more opioid medications for a single patient using the NIH HEAL MME Online Calculator API. To use it, you'll need to provide:
+The core function in the package is `calculate_mme.list()`, which can calculate MME for one or more opioid medications for a single patient or for multiple different patients using the NIH HEAL MME Online Calculator API. To use it with data for a single patient, you'll need to provide:
 
-1. Total therapy days (with each calendar day counted once)
-2. The observation window in days
-3. A list of medications with dosage information
+1. A `list` of medications with dosage information
+2. Total therapy days (with each calendar day counted once)
+3. The observation window in days
 
 Here's a simple example:
 
@@ -87,29 +90,27 @@ meds_list <- list(
 
 # Calculate MME with 7 therapy days and 14-day observation window
 result <- calculate_mme(
+  x = meds_list,
   therapy_days = 7,
-  observation_window_days = 14, 
-  medications = meds_list
+  observation_window_days = 14
   )
 ```
 
+`calculate_mme()`'s `use_api` argument is set to `TRUE` by default when providing data for a single patient.
 
 ## Understanding the Results
 
 Let's examine the results of our calculation:
 
 ``` {r}
-# Extract medication-level results
-medication_results <- result$medications
-print(medication_results)
+# Medication-level results
+print(result$medications)
 
-# Extract MME definitions with buprenorphine
-mme_with_bupr <- result$mme_definitions$with_buprenorphine
-print(mme_with_bupr)
+# MME definitions with buprenorphine
+print(result$mme_definitions$with_buprenorphine)
 
-# Extract MME definitions without buprenorphine
-mme_without_bupr <- result$mme_definitions$without_buprenorphine
-print(mme_without_bupr)
+# MME definitions without buprenorphine
+print(result$mme_definitions$without_buprenorphine)
 ```
 
 The results include:
@@ -127,44 +128,39 @@ The results include:
 
 ## When to Use Local Calculations
 
-The NIH HEAL MME Online Calculator currently has a rate limit of 50 requests per 15 minutes, where each calculation request is unique to a patient. For datasets with substantially more than 50 patients, you can use `calculate_mme()` with the `use_api` argument set to `FALSE`, which performs the exact same calculations locally:
+The NIH HEAL MME Online Calculator currently has a rate limit of 50 requests per 15 minutes, where each calculation request is unique to a patient. You can use `calculate_mme.list()` with the `use_api = FALSE`, which performs the exact same calculations locally:
 
 ``` {r} 
 # Use local calculation (no API call)
 calculate_mme(
+  x = meds_list,
   therapy_days = 7, 
   observation_window_days = 14,
-  medications = meds_list,
   use_api = FALSE
   )
 ```
 
 The inputs and outputs are identical to `calculate_mme()` with `use_api = TRUE` (the default), but no external API calls are made.
 
-## Working with Data Frames
+## Working with `data.frame`s and tibbles
 
-For real-world data analysis, you'll often have medication data in a data frame rather than a list. As an example, `mmequiv` contains a synthetic dataset called `opioid_trial` that contains one row per opioid prescription for 1000 fake patients (long format) with each row containing the components required for MME calculation. For large datasets that would take an annoyingly long time to calculate using the API (recall the API rate limit of 50 patients per 15 minutes), we can use `calculate_mme_df()`:
+For real-world data analysis, you'll often have medication data in a `data.frame` or tibble rather than a `list`. As an example, `mmequiv` contains a synthetic dataset called `opioid_trial` that contains one row per opioid prescription for 1000 fake patients (long format) with each row containing the variables required for MME calculation. For large datasets that would take an annoyingly long time to calculate using the API (recall the API rate limit of 50 patients per 15 minutes), we can use `calculate_mme.data.frame()`:
 
 ``` {r}
 # View the example dataset structure
 head(opioid_trial)
 
 # Calculate MME from a data frame
-mme_df_result <- calculate_mme_df(
-  data = opioid_trial,
-  id_col = "patient_id",
-  medication_col = "medication_name", 
-  dose_col = "dose",
-  doses_per_day_col = "doses_per_24_hours",
-  days_col = "days_of_medication",
-  therapy_days_col = "therapy_days",
-  observation_days_col = "observation_window_days",
+mme_df_result <- calculate_mme(
+  x = opioid_trial,
   therapy_days_without_col = "therapy_days_without",
   observation_days_without_col = "observation_window_days_without"
 )
 ```
 
-The results include:
+`calculate_mme()` uses S3 methods and will automatically select the underlying actions needed based on the class of `x`. `calculate_mme.data.frame()` has several arguments not shown in the example above that deal with specifying column names if supplying column names that differ from the function's defaults.
+
+The results from `calculate_mme.data.frame()` include:
 
 ``` {r}
 # Original data with MME calculations added
@@ -185,7 +181,6 @@ The package calculates four different MME/day definitions, each suited for diffe
 
     * Best suited for studies of immediate-release opioids prescribed for short, discrete periods
 
-
 2. **MME Definition 2 (`mme2`)**: Total MME divided by On-therapy Days
 
     * Ideal for studies of dose-dependent adverse effects (e.g., opioid-induced constipation)
@@ -197,7 +192,6 @@ The package calculates four different MME/day definitions, each suited for diffe
     * Recommended by the Department of Health and Human Services Office of the Inspector General
     * Suitable for studies with a known duration of risk (e.g., opioid use disorder incidence)
     * Useful when prescriptions are filled at irregular intervals (PRN basis)
-
 
 4. **MME Definition 4 (`mme4`)**: Maximum Daily Dose
 

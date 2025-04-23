@@ -16,78 +16,78 @@ test_that("Provides error messages for invalid therapy_days and observation_wind
   
   expect_snapshot(
     error = TRUE,
-    calculate_mme("invalid", 5, meds_list)
+    calculate_mme(meds_list, "invalid", 5)
   )
   
   expect_snapshot(
     error = TRUE,
-    calculate_mme(0, 5, meds_list)
+    calculate_mme(meds_list, 0, 5)
   )
   
   expect_snapshot(
     error = TRUE,
-    calculate_mme(-10, 5, meds_list)
+    calculate_mme(meds_list, -10, 5)
   )
   
   expect_snapshot(
     error = TRUE,
-    calculate_mme(10, "invalid", meds_list)
+    calculate_mme(meds_list, 10, "invalid")
   )
   
   expect_snapshot(
     error = TRUE,
-    calculate_mme(10, 0, meds_list)
+    calculate_mme(meds_list, 10, 0)
   )
   
   expect_snapshot(
     error = TRUE,
-    calculate_mme(10, -5, meds_list)
+    calculate_mme(meds_list, 10, -5)
   )
   
   # New tests for vectors with 2 values
   expect_snapshot(
     error = TRUE,
-    calculate_mme(c(10, 0), 5, meds_list)  # Second value is 0
+    calculate_mme(meds_list, c(10, 0), 5)  # Second value is 0
   )
   
   expect_snapshot(
     error = TRUE,
-    calculate_mme(c(10, -5), 5, meds_list)  # Second value is negative
+    calculate_mme(meds_list, c(10, -5), 5)  # Second value is negative
   )
   
   expect_snapshot(
     error = TRUE,
-    calculate_mme(c(0, 10), 5, meds_list)  # First value is 0
+    calculate_mme(meds_list, c(0, 10), 5)  # First value is 0
   )
   
   expect_snapshot(
     error = TRUE,
-    calculate_mme(c(-1, 10), 5, meds_list)  # First value is negative
+    calculate_mme(meds_list, c(-1, 10), 5)  # First value is negative
   )
   
   expect_snapshot(
     error = TRUE,
-    calculate_mme(10, c(5, 0), meds_list)  # Second value is 0
+    calculate_mme(meds_list, 10, c(5, 0))  # Second value is 0
   )
   
   expect_snapshot(
     error = TRUE,
-    calculate_mme(10, c(0, 5), meds_list)  # First value is 0
+    calculate_mme(meds_list, 10, c(0, 5))  # First value is 0
   )
   
   expect_snapshot(
     error = TRUE,
-    calculate_mme(10, c(-5, 5), meds_list)  # First value is negative
+    calculate_mme(meds_list, 10, c(-5, 5))  # First value is negative
   )
   
   expect_snapshot(
     error = TRUE,
-    calculate_mme(c(10, 20, 30), 5, meds_list)  # Three values instead of 1 or 2
+    calculate_mme(meds_list, c(10, 20, 30), 5)  # Three values instead of 1 or 2
   )
   
   expect_snapshot(
     error = TRUE,
-    calculate_mme(10, c(5, 10, 15), meds_list)  # Three values instead of 1 or 2
+    calculate_mme(meds_list, 10, c(5, 10, 15))  # Three values instead of 1 or 2
   )
 })
 
@@ -105,22 +105,22 @@ test_that("Accepts both single values and vectors of two values", {
   httptest2::with_mock_dir("calculate_mme", {
     # Test with single values for both parameters
     expect_no_error(
-      calculate_mme(10, 5, meds_list)
+      calculate_mme(meds_list, 10, 5)
     )
     
     # Test with vector for therapy_days and single value for observation_window_days
     expect_no_error(
-      calculate_mme(c(10, 15), 5, meds_list)
+      calculate_mme(meds_list, c(10, 15), 5)
     )
     
     # Test with single value for therapy_days and vector for observation_window_days
     expect_no_error(
-      calculate_mme(10, c(5, 7), meds_list)
+      calculate_mme(meds_list, 10, c(5, 7))
     )
     
     # Test with vectors for both parameters
     expect_no_error(
-      calculate_mme(c(10, 15), c(5, 7), meds_list)
+      calculate_mme(meds_list, c(10, 15), c(5, 7))
     )
   })
 })
@@ -128,18 +128,18 @@ test_that("Accepts both single values and vectors of two values", {
 test_that("Provides error messages for invalid medications argument", {
   expect_snapshot(
     error = TRUE,
-    calculate_mme(10, 5, "not_a_list")
+    calculate_mme("not_a_list", 10, 5)
   )
   
   expect_snapshot(
     error = TRUE,
-    calculate_mme(10, 5, list())  # Empty list
+    calculate_mme(list(), 10, 5)  # Empty list
   )
   
   # Test non-list element in medications
   expect_snapshot(
     error = TRUE,
-    calculate_mme(10, 5, list("not_a_medication_list"))
+    calculate_mme(list("not_a_medication_list"), 10, 5)
   )
   
   # Test missing required fields
@@ -148,7 +148,7 @@ test_that("Provides error messages for invalid medications argument", {
   )
   expect_snapshot(
     error = TRUE,
-    calculate_mme(10, 5, bad_meds_missing_field)
+    calculate_mme(bad_meds_missing_field, 10, 5)
   )
   
   # Test invalid medication_name type
@@ -162,13 +162,26 @@ test_that("Provides error messages for invalid medications argument", {
   )
   expect_snapshot(
     error = TRUE,
-    calculate_mme(10, 5, bad_meds_name)
+    calculate_mme(bad_meds_name, 10, 5)
+  )
+  
+  bad_meds_name2 <- list(
+    list(
+      medication_name = "Test Med",  # Should be a string
+      dose = 50,
+      doses_per_24_hours = 2,
+      days_of_medication = 5
+    )
+  )
+  expect_snapshot(
+    error = TRUE,
+    calculate_mme(bad_meds_name2, 10, 5)
   )
   
   # Test invalid dose type or value
   bad_meds_dose <- list(
     list(
-      medication_name = "Test Med",
+      medication_name = "Hydrocodone (mg)",
       dose = "50",  # Should be numeric
       doses_per_24_hours = 2,
       days_of_medication = 5
@@ -176,12 +189,12 @@ test_that("Provides error messages for invalid medications argument", {
   )
   expect_snapshot(
     error = TRUE,
-    calculate_mme(10, 5, bad_meds_dose)
+    calculate_mme(bad_meds_dose, 10, 5)
   )
   
   bad_meds_dose_negative <- list(
     list(
-      medication_name = "Test Med",
+      medication_name = "Hydrocodone (mg)",
       dose = -50,  # Should be positive
       doses_per_24_hours = 2,
       days_of_medication = 5
@@ -189,13 +202,13 @@ test_that("Provides error messages for invalid medications argument", {
   )
   expect_snapshot(
     error = TRUE,
-    calculate_mme(10, 5, bad_meds_dose_negative)
+    calculate_mme(bad_meds_dose_negative, 10, 5)
   )
   
   # Test invalid doses_per_24_hours
   bad_meds_doses_per_day <- list(
     list(
-      medication_name = "Test Med",
+      medication_name = "Hydrocodone (mg)",
       dose = 50,
       doses_per_24_hours = "2",  # Should be numeric
       days_of_medication = 5
@@ -203,13 +216,13 @@ test_that("Provides error messages for invalid medications argument", {
   )
   expect_snapshot(
     error = TRUE,
-    calculate_mme(10, 5, bad_meds_doses_per_day)
+    calculate_mme(bad_meds_doses_per_day, 10, 5)
   )
   
   # Test invalid days_of_medication
   bad_meds_days <- list(
     list(
-      medication_name = "Test Med",
+      medication_name = "Hydrocodone (mg)",
       dose = 50,
       doses_per_24_hours = 2,
       days_of_medication = 0  # Should be positive
@@ -217,7 +230,7 @@ test_that("Provides error messages for invalid medications argument", {
   )
   expect_snapshot(
     error = TRUE,
-    calculate_mme(10, 5, bad_meds_days)
+    calculate_mme(bad_meds_days, 10, 5)
   )
 })
 
@@ -249,13 +262,13 @@ test_that("Validates medication names against known list", {
   
   # Test with valid medication - should not error
   httptest2::with_mock_dir("calculate_mme", {
-    expect_no_error(calculate_mme(10, 5, valid_medication))
+    expect_no_error(calculate_mme(valid_medication, 10, 5))
   })
   
   # Test with invalid medication - should error
   expect_snapshot(
     error = TRUE,
-    calculate_mme(10, 5, invalid_medication)
+    calculate_mme(invalid_medication, 10, 5)
   )
 })
 
@@ -279,10 +292,10 @@ test_that("Local MME calculation matches API calculation", {
   # Get results from both methods
   # Use with_mock_dir for API call to avoid rate limit during testing
   httptest2::with_mock_dir("calculate_mme_use_api", {
-    api_result <- calculate_mme(10, 5, meds_list, use_api = TRUE)
+    api_result <- calculate_mme(meds_list, 10, 5, use_api = TRUE)
   })
   
-  local_result <- calculate_mme(10, 5, meds_list, use_api = FALSE)
+  local_result <- calculate_mme(meds_list, 10, 5, use_api = FALSE)
   
   # Test overall structure is the same
   expect_identical(names(api_result), names(local_result))

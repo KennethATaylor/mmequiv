@@ -1,37 +1,24 @@
-test_that("Function is deprecated", {
-  test_data <- opioid_trial |>
-    dplyr::filter(patient_id %in% sprintf("P%03d", 1:100))
-  
-  # Test deprecation warning
-  expect_snapshot(calculate_mme_df(data = test_data))
-  
-})
-
 test_that("Function works with data.frame and tibble", {
-  withr::local_options(lifecycle_verbosity = "quiet")
-  
   test_data <- opioid_trial |>
     dplyr::filter(patient_id %in% sprintf("P%03d", 1:100))
   
   # Test that the function works with data.frame
-  expect_no_error(calculate_mme_df(data = test_data))
+  expect_no_error(calculate_mme(x = test_data))
   
   # Test that function works with tibble
   tibble <- tibble::as_tibble(test_data)
-  expect_no_error(calculate_mme_df(data = tibble))
+  expect_no_error(calculate_mme(x = tibble))
   
 })
 
 test_that("Input validation works correctly", {
-  withr::local_options(lifecycle_verbosity = "quiet")
-  
   test_data <- opioid_trial |>
     dplyr::filter(patient_id %in% sprintf("P%03d", 1:100))
   
   # Test for missing id_col
   expect_snapshot(
     error = TRUE,
-    calculate_mme_df(data = test_data, id_col = "missing_column")
+    calculate_mme(x = test_data, id_col = "missing_column")
   )
   
   # Test for missing required columns
@@ -40,7 +27,7 @@ test_that("Input validation works correctly", {
   
   expect_snapshot(
     error = TRUE,
-    calculate_mme_df(data = bad_data)
+    calculate_mme(x = bad_data)
   )
   
   bad_data2 <- test_data
@@ -49,28 +36,26 @@ test_that("Input validation works correctly", {
   # Test for missing optional column that was specified
   expect_snapshot(
     error = TRUE,
-    calculate_mme_df(
-      data = bad_data2,
+    calculate_mme(
+      x = bad_data2,
       therapy_days_without_col = "therapy_days_without"
-      )
+    )
   )
   
   # Get list
-  output <- calculate_mme_df(data = test_data)
+  output <- calculate_mme(x = test_data)
   expect_snapshot(
     error = TRUE,
-    calculate_mme_df(data = output)
+    calculate_mme(x = output)
   )
   
 })
 
 test_that("Basic functionality works with default column names", {
-  withr::local_options(lifecycle_verbosity = "quiet")
-  
   test_data <- opioid_trial |>
     dplyr::filter(patient_id %in% sprintf("P%03d", 1:100))
   
-  result <- calculate_mme_df(data = test_data)
+  result <- calculate_mme(x = test_data)
   
   # Test structure of returned data
   expect_type(result, "list")
@@ -93,8 +78,6 @@ test_that("Basic functionality works with default column names", {
 })
 
 test_that("Custom column names are handled correctly", {
-  withr::local_options(lifecycle_verbosity = "quiet")
-  
   # Create test data with non-default column names
   test_data <- opioid_trial |>
     dplyr::filter(patient_id %in% sprintf("P%03d", 1:100))
@@ -113,8 +96,8 @@ test_that("Custom column names are handled correctly", {
     )
   
   # Run the function with custom column names
-  result <- calculate_mme_df(
-    data = test_data2,
+  result <- calculate_mme(
+    x = test_data2,
     id_col = "subject_id",
     medication_col = "med_name",
     dose_col = "dosage",
@@ -134,8 +117,6 @@ test_that("Custom column names are handled correctly", {
 })
 
 test_that("Handles optional without_buprenorphine columns", {
-  withr::local_options(lifecycle_verbosity = "quiet")
-  
   # Create test data without the optional columns
   test_data <- opioid_trial |>
     dplyr::filter(patient_id %in% sprintf("P%03d", 1:100))
@@ -145,13 +126,11 @@ test_that("Handles optional without_buprenorphine columns", {
   
   # Test that the function works without the optional columns
   expect_no_error(
-    calculate_mme_df(data = test_data2)
+    calculate_mme(x = test_data2)
   )
 })
 
 test_that("Empty results are handled correctly", {
-  withr::local_options(lifecycle_verbosity = "quiet")
-  
   # Create test data with empty result (no matching medications)
   test_data <- data.frame(
     patient_id = character(0),
@@ -166,6 +145,6 @@ test_that("Empty results are handled correctly", {
   # Test that function handles empty data correctly
   expect_snapshot(
     error = TRUE,
-    calculate_mme_df(data = test_data)
+    calculate_mme(x = test_data)
   )
 })
