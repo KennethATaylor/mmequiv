@@ -44,7 +44,7 @@ It also returns two additional data frames with patient-level MME summaries
     <div class="ref-description section level2">
     <p>This function takes medication data in long format (multiple rows per patient
 ID), calculates MME using the local calculation method
-(<code><a href="calculate_mme.html">calculate_mme_local()</a></code>), and adds prescription-level values as new columns.
+(<code><a href="calculate_mme_local.html">calculate_mme_local()</a></code>), and adds prescription-level values as new columns.
 It also returns two additional data frames with patient-level MME summaries
 (one with buprenorphine included and one without).</p>
     </div>
@@ -134,7 +134,7 @@ excluding buprenorphine</p></li>
 </ul></div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
-    <div class="dont-index"><p><code><a href="calculate_mme.html">calculate_mme_local()</a></code></p></div>
+    <div class="dont-index"><p><code><a href="calculate_mme_local.html">calculate_mme_local()</a></code></p></div>
     </div>
 
     <div class="section level2">
@@ -155,6 +155,11 @@ excluding buprenorphine</p></li>
 <span class="r-in"><span>  therapy_days_without_col <span class="op">=</span> <span class="st">"therapy_days_without"</span>,</span></span>
 <span class="r-in"><span>  observation_days_without_col <span class="op">=</span> <span class="st">"observation_window_days_without"</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>`calculate_mme_local()` was deprecated in mmequiv 0.2.0.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `calculate_mme(use_api = FALSE)` instead</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">mmequiv</span> package.</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>   Please report the issue at</span>
+<span class="r-wrn co"><span class="r-pr">#&gt;</span>   <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/KennethATaylor/mmequiv/issues&gt;</span>.</span>
 <span class="r-in"><span>  </span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">mme</span><span class="op">$</span><span class="va">medications</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 12</span></span>
