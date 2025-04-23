@@ -60,7 +60,7 @@
 #'   )
 #' # -> 
 #' mme <- calculate_mme(
-#'   data = opioid_trial |> dplyr::filter(patient_id %in% sprintf("P%03d", 1:100)),
+#'   x = opioid_trial |> dplyr::filter(patient_id %in% sprintf("P%03d", 1:100)),
 #'   therapy_days_without_col = "therapy_days_without",
 #'   observation_days_without_col = "observation_window_days_without"
 #'   )
@@ -85,8 +85,8 @@ calculate_mme_df <- function(data,
                              therapy_days_without_col = NULL,
                              observation_days_without_col = NULL) {
   lifecycle::deprecate_warn(
-    "0.2.0", 
-    "calculate_mme_df()", 
+    "0.2.0",
+    "calculate_mme_df()",
     "calculate_mme()"
   )
   
@@ -165,6 +165,7 @@ calculate_mme_df <- function(data,
     })
     
     # Calculate MME using the specified parameters
+    withr::local_options(lifecycle_verbosity = "quiet")
     mme_result <- calculate_mme_local(
       therapy_days = c(therapy_days_with, therapy_days_without),
       observation_window_days = c(observation_days_with, observation_days_without),

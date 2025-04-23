@@ -83,7 +83,7 @@ mme <- calculate_mme_df(
   )
 # -> 
 mme <- calculate_mme(
-  data = opioid_trial |> dplyr::filter(patient_id \%in\% sprintf("P\%03d", 1:100)),
+  x = opioid_trial |> dplyr::filter(patient_id \%in\% sprintf("P\%03d", 1:100)),
   therapy_days_without_col = "therapy_days_without",
   observation_days_without_col = "observation_window_days_without"
   )

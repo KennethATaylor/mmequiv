@@ -232,7 +232,7 @@ meds_list <- list(
 
 calculate_mme_local(10, 5, meds_list)
 # ->
-calculate_mme(10, 5, meds_list, use_api = FALSE)
+calculate_mme(meds_list, 10, 5, use_api = FALSE)
 
 # Clean up meds_list
 rm(meds_list)

@@ -41,7 +41,7 @@ test_that("Local MME calculation matches API calculation", {
   # Get results from both methods
   # Use with_mock_dir for API call to avoid rate limit during testing
   httptest2::with_mock_dir("calculate_mme_local", {
-    api_result <- calculate_mme(10, 5, meds_list)
+    api_result <- calculate_mme(meds_list, 10, 5, use_api = TRUE)
   })
   
   local_result <- calculate_mme_local(10, 5, meds_list)

@@ -6,11 +6,6 @@
       Warning:
       `calculate_mme_df()` was deprecated in mmequiv 0.2.0.
       i Please use `calculate_mme()` instead.
-      Warning:
-      `calculate_mme_local()` was deprecated in mmequiv 0.2.0.
-      i Please use `calculate_mme(use_api = FALSE)` instead
-      i The deprecated feature was likely used in the mmequiv package.
-        Please report the issue at <https://github.com/KennethATaylor/mmequiv/issues>.
     Output
       $medications
       # A tibble: 235 x 12
