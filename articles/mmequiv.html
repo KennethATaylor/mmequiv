@@ -133,14 +133,15 @@ partial name:</p>
 <h2 id="basic-mme-calculation-using-the-nih-heal-mme-online-calculator-api">Basic MME Calculation Using the NIH HEAL MME Online Calculator
 API<a class="anchor" aria-label="anchor" href="#basic-mme-calculation-using-the-nih-heal-mme-online-calculator-api"></a>
 </h2>
-<p>The core function in the package is <code><a href="../reference/calculate_mme.html">calculate_mme()</a></code>,
-which calculates MME for one or more opioid medications for a single
-patient using the NIH HEAL MME Online Calculator API. To use it, you’ll
-need to provide:</p>
+<p>The core function in the package is
+<code><a href="../reference/calculate_mme.list.html">calculate_mme.list()</a></code>, which can calculate MME for one or
+more opioid medications for a single patient or for multiple different
+patients using the NIH HEAL MME Online Calculator API. To use it with
+data for a single patient, you’ll need to provide:</p>
 <ol style="list-style-type: decimal">
+<li>A <code>list</code> of medications with dosage information</li>
 <li>Total therapy days (with each calendar day counted once)</li>
 <li>The observation window in days</li>
-<li>A list of medications with dosage information</li>
 </ol>
 <p>Here’s a simple example:</p>
 <div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
@@ -162,19 +163,21 @@ need to provide:</p>
 <span></span>
 <span><span class="co"># Calculate MME with 7 therapy days and 14-day observation window</span></span>
 <span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculate_mme.html">calculate_mme</a></span><span class="op">(</span></span>
+<span>  x <span class="op">=</span> <span class="va">meds_list</span>,</span>
 <span>  therapy_days <span class="op">=</span> <span class="fl">7</span>,</span>
-<span>  observation_window_days <span class="op">=</span> <span class="fl">14</span>, </span>
-<span>  medications <span class="op">=</span> <span class="va">meds_list</span></span>
+<span>  observation_window_days <span class="op">=</span> <span class="fl">14</span></span>
 <span>  <span class="op">)</span></span></code></pre></div>
+<p><code><a href="../reference/calculate_mme.html">calculate_mme()</a></code>’s <code>use_api</code> argument is set
+to <code>TRUE</code> by default when providing data for a single
+patient.</p>
 </div>
 <div class="section level2">
 <h2 id="understanding-the-results">Understanding the Results<a class="anchor" aria-label="anchor" href="#understanding-the-results"></a>
 </h2>
 <p>Let’s examine the results of our calculation:</p>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="co"># Extract medication-level results</span></span>
-<span><span class="va">medication_results</span> <span class="op">&lt;-</span> <span class="va">result</span><span class="op">$</span><span class="va">medications</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">medication_results</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="co"># Medication-level results</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">result</span><span class="op">$</span><span class="va">medications</span><span class="op">)</span></span>
 <span><span class="co">#&gt;    medication_name dose doses_per_24_hours days_of_medication factor mme</span></span>
 <span><span class="co">#&gt; 1 Hydrocodone (mg)   10                  4                  7    1.0 280</span></span>
 <span><span class="co">#&gt; 2   Oxycodone (mg)    5                  2                  5    1.5  75</span></span>
@@ -182,15 +185,13 @@ need to provide:</p>
 <span><span class="co">#&gt; 1             40</span></span>
 <span><span class="co">#&gt; 2             15</span></span>
 <span></span>
-<span><span class="co"># Extract MME definitions with buprenorphine</span></span>
-<span><span class="va">mme_with_bupr</span> <span class="op">&lt;-</span> <span class="va">result</span><span class="op">$</span><span class="va">mme_definitions</span><span class="op">$</span><span class="va">with_buprenorphine</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">mme_with_bupr</span><span class="op">)</span></span>
+<span><span class="co"># MME definitions with buprenorphine</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">result</span><span class="op">$</span><span class="va">mme_definitions</span><span class="op">$</span><span class="va">with_buprenorphine</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   total_mme total_days     mme1     mme2     mme3 mme4</span></span>
 <span><span class="co">#&gt; 1       355         12 29.58333 50.71429 25.35714   55</span></span>
 <span></span>
-<span><span class="co"># Extract MME definitions without buprenorphine</span></span>
-<span><span class="va">mme_without_bupr</span> <span class="op">&lt;-</span> <span class="va">result</span><span class="op">$</span><span class="va">mme_definitions</span><span class="op">$</span><span class="va">without_buprenorphine</span></span>
-<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">mme_without_bupr</span><span class="op">)</span></span>
+<span><span class="co"># MME definitions without buprenorphine</span></span>
+<span><span class="fu"><a href="https://rdrr.io/r/base/print.html" class="external-link">print</a></span><span class="op">(</span><span class="va">result</span><span class="op">$</span><span class="va">mme_definitions</span><span class="op">$</span><span class="va">without_buprenorphine</span><span class="op">)</span></span>
 <span><span class="co">#&gt;   total_mme total_days     mme1     mme2     mme3 mme4</span></span>
 <span><span class="co">#&gt; 1       355         12 29.58333 50.71429 25.35714   55</span></span></code></pre></div>
 <p>The results include:</p>
@@ -227,16 +228,15 @@ the patient’s prescriptions)</li>
 </h2>
 <p>The NIH HEAL MME Online Calculator currently has a rate limit of 50
 requests per 15 minutes, where each calculation request is unique to a
-patient. For datasets with substantially more than 50 patients, you can
-use <code><a href="../reference/calculate_mme.html">calculate_mme()</a></code> with the <code>use_api</code> argument
-set to <code>FALSE</code>, which performs the exact same calculations
+patient. You can use <code><a href="../reference/calculate_mme.list.html">calculate_mme.list()</a></code> with the
+<code>use_api = FALSE</code>, which performs the exact same calculations
 locally:</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Use local calculation (no API call)</span></span>
 <span><span class="fu"><a href="../reference/calculate_mme.html">calculate_mme</a></span><span class="op">(</span></span>
+<span>  x <span class="op">=</span> <span class="va">meds_list</span>,</span>
 <span>  therapy_days <span class="op">=</span> <span class="fl">7</span>, </span>
 <span>  observation_window_days <span class="op">=</span> <span class="fl">14</span>,</span>
-<span>  medications <span class="op">=</span> <span class="va">meds_list</span>,</span>
 <span>  use_api <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="co">#&gt; $message</span></span>
@@ -279,16 +279,17 @@ with <code>use_api = TRUE</code> (the default), but no external API
 calls are made.</p>
 </div>
 <div class="section level2">
-<h2 id="working-with-data-frames">Working with Data Frames<a class="anchor" aria-label="anchor" href="#working-with-data-frames"></a>
+<h2 id="working-with-data-frames-and-tibbles">Working with <code>data.frame</code>s and tibbles<a class="anchor" aria-label="anchor" href="#working-with-data-frames-and-tibbles"></a>
 </h2>
 <p>For real-world data analysis, you’ll often have medication data in a
-data frame rather than a list. As an example, <code>mmequiv</code>
-contains a synthetic dataset called <code>opioid_trial</code> that
-contains one row per opioid prescription for 1000 fake patients (long
-format) with each row containing the components required for MME
-calculation. For large datasets that would take an annoyingly long time
-to calculate using the API (recall the API rate limit of 50 patients per
-15 minutes), we can use <code><a href="../reference/calculate_mme_df.html">calculate_mme_df()</a></code>:</p>
+<code>data.frame</code> or tibble rather than a <code>list</code>. As an
+example, <code>mmequiv</code> contains a synthetic dataset called
+<code>opioid_trial</code> that contains one row per opioid prescription
+for 1000 fake patients (long format) with each row containing the
+variables required for MME calculation. For large datasets that would
+take an annoyingly long time to calculate using the API (recall the API
+rate limit of 50 patients per 15 minutes), we can use
+<code><a href="../reference/calculate_mme.data.frame.html">calculate_mme.data.frame()</a></code>:</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># View the example dataset structure</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">opioid_trial</span><span class="op">)</span></span>
@@ -315,42 +316,42 @@ to calculate using the API (recall the API rate limit of 50 patients per
 <span><span class="co">#&gt; 6                              30</span></span>
 <span></span>
 <span><span class="co"># Calculate MME from a data frame</span></span>
-<span><span class="va">mme_df_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculate_mme_df.html">calculate_mme_df</a></span><span class="op">(</span></span>
-<span>  data <span class="op">=</span> <span class="va">opioid_trial</span>,</span>
-<span>  id_col <span class="op">=</span> <span class="st">"patient_id"</span>,</span>
-<span>  medication_col <span class="op">=</span> <span class="st">"medication_name"</span>, </span>
-<span>  dose_col <span class="op">=</span> <span class="st">"dose"</span>,</span>
-<span>  doses_per_day_col <span class="op">=</span> <span class="st">"doses_per_24_hours"</span>,</span>
-<span>  days_col <span class="op">=</span> <span class="st">"days_of_medication"</span>,</span>
-<span>  therapy_days_col <span class="op">=</span> <span class="st">"therapy_days"</span>,</span>
-<span>  observation_days_col <span class="op">=</span> <span class="st">"observation_window_days"</span>,</span>
+<span><span class="va">mme_df_result</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/calculate_mme.html">calculate_mme</a></span><span class="op">(</span></span>
+<span>  x <span class="op">=</span> <span class="va">opioid_trial</span>,</span>
 <span>  therapy_days_without_col <span class="op">=</span> <span class="st">"therapy_days_without"</span>,</span>
 <span>  observation_days_without_col <span class="op">=</span> <span class="st">"observation_window_days_without"</span></span>
-<span><span class="op">)</span></span>
-<span><span class="co">#&gt; Warning: `calculate_mme_local()` was deprecated in mmequiv 0.2.0.</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> Please use `calculate_mme(use_api = FALSE)` instead</span></span>
-<span><span class="co">#&gt; <span style="color: #00BBBB;">ℹ</span> The deprecated feature was likely used in the <span style="color: #0000BB;">mmequiv</span> package.</span></span>
-<span><span class="co">#&gt;   Please report the issue at</span></span>
-<span><span class="co">#&gt;   <span style="color: #0000BB; font-style: italic;">&lt;https://github.com/KennethATaylor/mmequiv/issues&gt;</span>.</span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">This warning is displayed once every 8 hours.</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">Call `lifecycle::last_lifecycle_warnings()` to see where this warning was</span></span></span>
-<span><span class="co">#&gt; <span style="color: #555555;">generated.</span></span></span></code></pre></div>
-<p>The results include:</p>
+<span><span class="op">)</span></span></code></pre></div>
+<p><code><a href="../reference/calculate_mme.html">calculate_mme()</a></code> uses S3 methods and will automatically
+select the underlying actions needed based on the class of
+<code>x</code>. <code><a href="../reference/calculate_mme.data.frame.html">calculate_mme.data.frame()</a></code> has several
+arguments not shown in the example above that deal with specifying
+column names if supplying column names that differ from the function’s
+defaults.</p>
+<p>The results from <code><a href="../reference/calculate_mme.data.frame.html">calculate_mme.data.frame()</a></code> include:</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Original data with MME calculations added</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">mme_df_result</span><span class="op">$</span><span class="va">medications</span><span class="op">)</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># A data frame: 6 × 12</span></span></span>
-<span><span class="co">#&gt;   patient_id medication_name          dose doses_per_24_hours days_of_medication</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">*</span> <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>      <span style="color: #949494; font-style: italic;">&lt;chr&gt;</span>                   <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span>              <span style="color: #949494; font-style: italic;">&lt;dbl&gt;</span></span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">1</span> P001       Fentanyl patch (mcg/hr)  12.5                  1                  7</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">2</span> P001       tramadol (mg) LA        125                    1                 30</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">3</span> P002       Hydrocodone (mg)         10                    3                 14</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">4</span> P002       tramadol (mg)            60                    3                 14</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">5</span> P003       Meperidine HCL (mg)      50                    4                  7</span></span>
-<span><span class="co">#&gt; <span style="color: #BCBCBC;">6</span> P003       tramadol (mg)            90                    3                  7</span></span>
-<span><span class="co">#&gt; <span style="color: #949494;"># ℹ 7 more variables: therapy_days &lt;dbl&gt;, observation_window_days &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   therapy_days_without &lt;dbl&gt;, observation_window_days_without &lt;dbl&gt;,</span></span></span>
-<span><span class="co">#&gt; <span style="color: #949494;">#   factor &lt;dbl&gt;, mme &lt;dbl&gt;, single_day_mme &lt;dbl&gt;</span></span></span>
+<span><span class="co">#&gt;   patient_id         medication_name  dose doses_per_24_hours</span></span>
+<span><span class="co">#&gt; 1       P001 Fentanyl patch (mcg/hr)  12.5                  1</span></span>
+<span><span class="co">#&gt; 2       P001        tramadol (mg) LA 125.0                  1</span></span>
+<span><span class="co">#&gt; 3       P002        Hydrocodone (mg)  10.0                  3</span></span>
+<span><span class="co">#&gt; 4       P002           tramadol (mg)  60.0                  3</span></span>
+<span><span class="co">#&gt; 5       P003     Meperidine HCL (mg)  50.0                  4</span></span>
+<span><span class="co">#&gt; 6       P003           tramadol (mg)  90.0                  3</span></span>
+<span><span class="co">#&gt;   days_of_medication therapy_days observation_window_days therapy_days_without</span></span>
+<span><span class="co">#&gt; 1                  7            7                      30                    7</span></span>
+<span><span class="co">#&gt; 2                 30           30                      45                   30</span></span>
+<span><span class="co">#&gt; 3                 14           14                      30                   14</span></span>
+<span><span class="co">#&gt; 4                 14           14                      30                   14</span></span>
+<span><span class="co">#&gt; 5                  7            7                      30                    7</span></span>
+<span><span class="co">#&gt; 6                  7            7                      30                    7</span></span>
+<span><span class="co">#&gt;   observation_window_days_without factor mme single_day_mme</span></span>
+<span><span class="co">#&gt; 1                              30    2.4 210             30</span></span>
+<span><span class="co">#&gt; 2                              45    0.2 750             25</span></span>
+<span><span class="co">#&gt; 3                              30    1.0 420             30</span></span>
+<span><span class="co">#&gt; 4                              30    0.2 504             36</span></span>
+<span><span class="co">#&gt; 5                              30    0.1 140             20</span></span>
+<span><span class="co">#&gt; 6                              30    0.2 378             54</span></span>
 <span></span>
 <span><span class="co"># Patient-level summaries with buprenorphine</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">mme_df_result</span><span class="op">$</span><span class="va">patient_summary_with_buprenorphine</span><span class="op">)</span></span>

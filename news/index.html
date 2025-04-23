@@ -34,7 +34,9 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="development version" id="mmequiv-development-version">mmequiv (development version)<a class="anchor" aria-label="anchor" href="#mmequiv-development-version"></a></h2>
-<ul><li><p>Deprecated <code><a href="../reference/calculate_mme_local.html">calculate_mme_local()</a></code> and consolidated local calculation functionality under <code><a href="../reference/calculate_mme.html">calculate_mme()</a></code> with new <code>use_api</code> argument (<a href="https://github.com/KennethATaylor/mmequiv/issues/3" class="external-link">#3</a>)</p></li>
+<ul><li><p><code><a href="../reference/calculate_mme.data.frame.html">calculate_mme.data.frame()</a></code> and <code><a href="../reference/calculate_mme.data.frame.html">calculate_mme.tbl_df()</a></code> now allow users to specify <code>use_api</code> and includes informative warnings about the API rate limit</p></li>
+<li><p>Deprecated <code><a href="../reference/calculate_mme_df.html">calculate_mme_df()</a></code> and refactored <code><a href="../reference/calculate_mme.html">calculate_mme()</a></code> to use S3 methods for <code>list</code>, <code>data.frame</code>, and <code>tbl_df</code> objects (<a href="https://github.com/KennethATaylor/mmequiv/issues/4" class="external-link">#4</a>)</p></li>
+<li><p>Deprecated <code><a href="../reference/calculate_mme_local.html">calculate_mme_local()</a></code> and consolidated local calculation functionality under <code><a href="../reference/calculate_mme.html">calculate_mme()</a></code> with new <code>use_api</code> argument (<a href="https://github.com/KennethATaylor/mmequiv/issues/3" class="external-link">#3</a>)</p></li>
 <li><p>Fixed <code><a href="../reference/calculate_mme_df.html">calculate_mme_df()</a></code> bug in error catching logic and removed hard dependency on <code>tibble</code> package</p></li>
 <li><p>Updated <code>DESCRIPTION</code> in response to CRAN reviewer suggestion for next submission</p></li>
 </ul></div>
