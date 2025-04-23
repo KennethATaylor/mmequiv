@@ -1,3 +1,50 @@
+# calculate_mme_local() is deprecated
+
+    Code
+      calculate_mme_local(10, 5, meds_list)
+    Condition
+      Warning:
+      `calculate_mme_local()` was deprecated in mmequiv 0.2.0.
+      i Please use `calculate_mme(use_api = FALSE)` instead
+    Output
+      $message
+      [1] "Processed medications (local calculation)"
+      
+      $therapy_obs_window_with
+      $therapy_obs_window_with$therapy_days
+      [1] 10
+      
+      $therapy_obs_window_with$observation_window_days
+      [1] 5
+      
+      
+      $therapy_obs_window_without
+      $therapy_obs_window_without$therapy_days
+      [1] 10
+      
+      $therapy_obs_window_without$observation_window_days
+      [1] 5
+      
+      
+      $medications
+                               medication_name dose doses_per_24_hours
+      1 Buprenorphine buccal film (mcg) buccal   50                  2
+      2                       Hydrocodone (mg)   75                  3
+        days_of_medication factor    mme single_day_mme
+      1                  5  0.039   19.5            3.9
+      2                 10  1.000 2250.0          225.0
+      
+      $mme_definitions
+      $mme_definitions$with_buprenorphine
+        total_mme total_days  mme1   mme2  mme3  mme4
+      1    2269.5         15 151.3 226.95 453.9 228.9
+      
+      $mme_definitions$without_buprenorphine
+        total_mme total_days mme1 mme2 mme3 mme4
+      1      2250         10  225  225  450  225
+      
+      
+
 # Provides error messages for invalid therapy_days and observation_window_days arguments
 
     Code
