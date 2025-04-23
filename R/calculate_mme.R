@@ -1,5 +1,34 @@
 #' Calculate morphine milligram equivalents (MME)
 #' 
+#' - [`calculate_mme.list()`]
+#' - [`calculate_mme.data.frame()`]
+#' - [`calculate_mme.tbl_df()`]
+#' 
+#' @param x (`list`, `data.frame`, or `tbl_df`)\cr
+#'     Object with input data; either a `list` of medications or long format 
+#'     data - `data.frame` or tibble.
+#' @param ... Additional arguments passed to methods
+#' 
+#' @keywords internal
+#' 
+#' @export
+#' 
+calculate_mme <- function(x,
+                          ...) {
+  
+  if (rlang::is_list(x) || inherits(x, "data.frame")) {
+    UseMethod("calculate_mme")
+  } else {
+    cli::cli_abort(c(
+      "The {.arg x} argument must be a {.cls list}, {.cls data.frame}, or {.cls tbl_df}",
+      "x" = "You've specified a {.cls {class(x)}}"
+    ))
+  }
+}
+
+
+#' Calculate morphine milligram equivalents (MME) for a single study participant
+#' 
 #' Calculates the single-day MME and total MME for each individual prescription 
 #'     opioid medication submitted for calculation. Also calculates total MME, 
 #'     total days of supply, and four distinct Total MME/Day calculations from 
@@ -48,8 +77,8 @@
 #'   * If there are overlapping prescriptions, this is the number of unique 
 #'       calendar days.
 #'  
-#' **Total MME** (`total_mme`): The MME for each medication, summed across all prescriptions.
-#'     This is the numerator for MME/Day definitions 1, 2, and 3.
+#' **Total MME** (`total_mme`): The MME for each medication, summed across all 
+#'     prescriptions. This is the numerator for MME/Day definitions 1, 2, and 3.
 #'
 #' **Total Days Supply** (`total_days`): The sum of the entered prescription 
 #'     duration (`days_of_medication`) for each of the `medications` (Med 1 
@@ -64,7 +93,8 @@
 #'     
 #' **MME/Day Definition 1 (`mme1`): Total Days Supply**
 #' 
-#' MME Definition 1 = Total MME / Total Days Supply time window (sum of entered prescription durations).
+#' MME Definition 1 = Total MME / Total Days Supply time window (sum of entered 
+#'     prescription durations).
 #' 
 #' ```r
 #' mme1 = total_mme / total_days
@@ -153,33 +183,9 @@
 #' * This calculator sums the 24-hour MME for every prescription, without 
 #'     considering calendar dates.
 #'
-#' @param therapy_days Either a single positive number or a vector of two 
-#'     positive numbers indicating the sum of prescription duration (days) for 
-#'     each medication, but _with each calendar day counted only ONCE_. When a 
-#'     single number is provided, it is used for the both the "with 
-#'     buprenorphine" and "without buprenorphine" MME calculations; when a 
-#'     vector of 2 numbers is provided (e.g., `c(10, 18)`) then the first and 
-#'     second numbers in the vector are used for the "with buprenorphine" and 
-#'     "without buprenorphine" MME calculations, respectively. This is the 
-#'     denominator for MME/Day definition 2.
-#'     
-#'  * If there is only one prescription _or_ if there is no calendar overlap 
-#'      (i.e., no days on which more than one prescription is active) this 
-#'      will be the same as the total days supply returned by the calculator 
-#'      API (`total_days`). 
-#'  * If there are overlapping prescriptions, this is the number of _unique_ 
-#'      calendar days.
-#' @param observation_window_days Either a single positive number or a vector of
-#'     two positive numbers indicating a study-defined fixed observation window 
-#'     of time. Typical choices are 7 day, 14 day, 30 day, 90 day. When a single 
-#'     number is provided, it is used for the both the "with buprenorphine" and 
-#'     "without buprenorphine" MME calculations; when a vector of 2 numbers is 
-#'     provided (e.g., `c(7, 30)`) then the first and second numbers in the 
-#'     vector are used for the "with buprenorphine" and "without buprenorphine" 
-#'     MME calculations, respectively. This is the denominator for MME/Day 
-#'     definition 3.
-#' @param medications A list of medication definitions. Each element must be a 
-#'     list containing each of the following fields:
+#' @param x (`list`)\cr
+#'     A `list` of medications. Each element must be a nested `list` containing 
+#'     each of the following fields:
 #'     
 #'  * `medication_name`: a string matching an API-accepted medication name and
 #'      its dosage units. To see a full list of API-accepted values, run 
@@ -192,44 +198,79 @@
 #'  * `days_of_medication`: a positive number indicating the duration of the 
 #'      opioid medication prescription listed in the associated 
 #'      `medication_name` in days.
-#' @param use_api logical; indicates whether to use the NIH HEAL Online MME 
-#'     Calculator API (default) to perform calculations or perform them locally 
-#'     instead. Setting to `FALSE` allows the user to perform the same 
-#'     calculations without being restricted by the API rate limit of 50 
-#'     patient calculations per 15 minutes and also allows the user to perform
-#'     the calculations without relying on internet access.
+#' @param therapy_days (`numeric`)\cr
+#'     Either a single positive number or a vector of two positive numbers 
+#'     indicating the sum of prescription duration (days) for each medication, 
+#'     but _with each calendar day counted only ONCE_. When a single number is 
+#'     provided, it is used for the both the "with buprenorphine" and "without 
+#'     buprenorphine" MME calculations; when a vector of 2 numbers is provided 
+#'     (e.g., `c(10, 18)`) then the first and second numbers in the vector are 
+#'     used for the "with buprenorphine" and "without buprenorphine" MME 
+#'     calculations, respectively. This is the denominator for MME/Day 
+#'     definition 2.
+#'     
+#'  * If there is only one prescription _or_ if there is no calendar overlap 
+#'      (i.e., no days on which more than one prescription is active) this 
+#'      will be the same as the total days supply returned by the calculator 
+#'      API (`total_days`). 
+#'  * If there are overlapping prescriptions, this is the number of _unique_ 
+#'      calendar days.
+#' @param observation_window_days (`numeric`)\cr 
+#'     Either a single positive number or a vector of two positive numbers 
+#'     indicating a study-defined fixed observation window of time. Typical 
+#'     choices are 7 day, 14 day, 30 day, 90 day. When a single number is 
+#'     provided, it is used for the both the "with buprenorphine" and "without 
+#'     buprenorphine" MME calculations; when a vector of 2 numbers is provided 
+#'     (e.g., `c(7, 30)`) then the first and second numbers in the vector are 
+#'     used for the "with buprenorphine" and "without buprenorphine" MME 
+#'     calculations, respectively. This is the denominator for MME/Day 
+#'     definition 3.
+#' @param use_api (`logical`)\cr 
+#'     Indicates whether to use the NIH HEAL Online MME Calculator API (default) 
+#'     to perform calculations or perform them locally instead (`FALSE`). 
+#'     Setting to `FALSE` allows the user to perform the same calculations 
+#'     without being restricted by the Online MME Calculator API rate limit of 
+#'     50 patient calculations per 15 minutes and also allows the user to 
+#'     perform the calculations without relying on internet access.
+#' @inheritParams rlang::args_dots_empty
 #'
 #' @returns
-#' A list of MME calculations. Will error if any medications are invalid or if 
+#' A `list` of MME calculations. Will error if any medications are invalid or if 
 #'     any numeric parameters are not positive numbers.
 #'
+#' @seealso [`calculate_mme.data.frame()`]
 #' @export
 #' 
 #' @examples
 #' meds_list <- list(
 #'   list(
-#'     medication_name = "Buprenorphine buccal film (mcg) buccal",
-#'     dose = 50,
-#'     doses_per_24_hours = 2,
-#'     days_of_medication = 5
+#'     medication_name = "Morphine (mg)",
+#'     dose = 5,
+#'     doses_per_24_hours = 4,
+#'     days_of_medication = 7
 #'     ),
 #'   list(
-#'     medication_name = "Hydrocodone (mg)",
-#'     dose = 75,
+#'     medication_name = "Morphine (mg) LA",
+#'     dose = 10,
 #'     doses_per_24_hours = 3,
-#'     days_of_medication = 10
+#'     days_of_medication = 30
 #'     )
 #' )
 #' 
 #' # Using API
-#' calculate_mme(10, 5, meds_list)
+#' calculate_mme(meds_list, 10, 5)
 #' 
 #' # Not using API
-#' calculate_mme(10, 5, meds_list, use_api = FALSE)
+#' calculate_mme(meds_list, 10, 5, use_api = FALSE)
 #' 
 #' # Clean up meds_list
 #' rm(meds_list)
-calculate_mme <- function(therapy_days, observation_window_days, medications, use_api = TRUE) {
+#' 
+calculate_mme.list <- function(x, 
+                               therapy_days, 
+                               observation_window_days, 
+                               use_api = TRUE,
+                               ...) {
   
   # Validate inputs
   # ------ Input validation for therapy_days ------
@@ -290,29 +331,26 @@ calculate_mme <- function(therapy_days, observation_window_days, medications, us
     ))
   }
   
-  if (length(medications) == 0) {
-    cli::cli_abort("The {.arg medications} argument must be a non-empty {.cls list}")
-  }
-  if (!is.list(medications)) {
-    cli::cli_abort(c(
-      "The {.arg medications} argument must be a {.cls list}",
-      "x" = "You've supplied a {.cls {class(medications)}}"
-    ))
-  }
-  
   # Use the internal package data with saved med list
   valid_med_names <- med_list$med_name
   
   # Validate each medication in the list
   required_fields <- c("medication_name", "dose", "doses_per_24_hours", "days_of_medication")
   
-  for (i in seq_along(medications)) {
-    med <- medications[[i]]
+  if (length(x) == 0) {
+    cli::cli_abort(c(
+      "When the {.arg x} argument is a {.cls list}, it must have at least one nested {.cls list} element",
+      "i" = "Each nested {.cls list} element must have the following fields: {.field {required_fields}}"
+      ))
+  }
+  
+  for (i in seq_along(x)) {
+    med <- x[[i]]
     
     # Check if it's a list
     if (!is.list(med)) {
       cli::cli_abort(c(
-        "Element {i} in {.arg medications} must be a {.cls list}",
+        "Element {i} in {.arg x} must be a {.cls list}",
         "x" = "You've supplied a {.cls {class(med)}}"
       ))
     }
@@ -320,35 +358,35 @@ calculate_mme <- function(therapy_days, observation_window_days, medications, us
     # Check for required fields
     missing_fields <- setdiff(required_fields, names(med))
     if (length(missing_fields) > 0) {
-      cli::cli_abort("Element {i} in {.arg medications} is missing required fields: {.field {missing_fields}}")
+      cli::cli_abort("Element {i} in {.arg x} is missing required fields: {.field {missing_fields}}")
     }
     
     # Validate field types
     if (!is.character(med$medication_name) || length(med$medication_name) != 1) {
-      cli::cli_abort("Element {i} in {.arg medications}: {.field medication_name} must be a single {.cls character} string")
+      cli::cli_abort("Element {i} in {.arg x}: {.field medication_name} must be a single {.cls character} string")
     }
     
     if (length(valid_med_names) > 0 && !med$medication_name %in% valid_med_names) {
       cli::cli_abort(c(
-        "Element {i} in {.arg medications}: {.field medication_name} {.val {med$medication_name}} is not a medication name accepted by the API",
+        "Element {i} in {.arg x}: {.field medication_name} {.val {med$medication_name}} is not a medication name accepted by the API",
         "i" = "Run {.fn get_med_list} to see the list of {.field medication_name}s accepted by the API"
       ))
     }
     
     if (!is.numeric(med$dose) || length(med$dose) != 1 || med$dose <= 0) {
-      cli::cli_abort("Element {i} in {.arg medications}: {.field dose} must be a positive number")
+      cli::cli_abort("Element {i} in {.arg x}: {.field dose} must be a positive number")
     }
     
     if (!is.numeric(med$doses_per_24_hours) || length(med$doses_per_24_hours) != 1 || med$doses_per_24_hours <= 0) {
-      cli::cli_abort("Element {i} in {.arg medications}: {.field doses_per_24_hours} must be a positive number")
+      cli::cli_abort("Element {i} in {.arg x}: {.field doses_per_24_hours} must be a positive number")
     }
     
     if (!is.numeric(med$days_of_medication) || length(med$days_of_medication) != 1 || med$days_of_medication <= 0) {
-      cli::cli_abort("Element {i} in {.arg medications}: {.field days_of_medication} must be a positive number")
+      cli::cli_abort("Element {i} in {.arg x}: {.field days_of_medication} must be a positive number")
     }
   }
   
-  if(!is_logical(use_api)) {
+  if(!rlang::is_logical(use_api)) {
     cli::cli_abort("{.arg use_api} must be either {.code TRUE} or {.code FALSE}")
   }
   
@@ -375,7 +413,7 @@ calculate_mme <- function(therapy_days, observation_window_days, medications, us
         therapy_days = therapy_days_without,
         observation_window_days = observation_window_days_without
       ),
-      medications = medications
+      medications = x
     )
     
     req <- httr2::request(glue::glue("{base_url}/mme_definitions")) |>
@@ -398,7 +436,7 @@ calculate_mme <- function(therapy_days, observation_window_days, medications, us
     cf_lookup <- stats::setNames(med_list$cf, med_list$med_name)
     
     # Calculate per-medication stats
-    processed_meds <- lapply(medications, function(med) {
+    processed_meds <- lapply(x, function(med) {
       # Get conversion factor for this medication
       factor <- cf_lookup[med$medication_name]
       
