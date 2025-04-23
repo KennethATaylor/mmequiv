@@ -1,4 +1,14 @@
+test_that("Function is deprecated", {
+  test_data <- opioid_trial |>
+    dplyr::filter(patient_id %in% sprintf("P%03d", 1:100))
+  
+  # Test deprecation warning
+  expect_snapshot(calculate_mme_df(data = test_data))
+  
+})
+
 test_that("Function works with data.frame and tibble", {
+  withr::local_options(lifecycle_verbosity = "quiet")
   
   test_data <- opioid_trial |>
     dplyr::filter(patient_id %in% sprintf("P%03d", 1:100))
@@ -13,6 +23,7 @@ test_that("Function works with data.frame and tibble", {
 })
 
 test_that("Input validation works correctly", {
+  withr::local_options(lifecycle_verbosity = "quiet")
   
   test_data <- opioid_trial |>
     dplyr::filter(patient_id %in% sprintf("P%03d", 1:100))
@@ -54,6 +65,8 @@ test_that("Input validation works correctly", {
 })
 
 test_that("Basic functionality works with default column names", {
+  withr::local_options(lifecycle_verbosity = "quiet")
+  
   test_data <- opioid_trial |>
     dplyr::filter(patient_id %in% sprintf("P%03d", 1:100))
   
@@ -80,6 +93,8 @@ test_that("Basic functionality works with default column names", {
 })
 
 test_that("Custom column names are handled correctly", {
+  withr::local_options(lifecycle_verbosity = "quiet")
+  
   # Create test data with non-default column names
   test_data <- opioid_trial |>
     dplyr::filter(patient_id %in% sprintf("P%03d", 1:100))
@@ -119,6 +134,8 @@ test_that("Custom column names are handled correctly", {
 })
 
 test_that("Handles optional without_buprenorphine columns", {
+  withr::local_options(lifecycle_verbosity = "quiet")
+  
   # Create test data without the optional columns
   test_data <- opioid_trial |>
     dplyr::filter(patient_id %in% sprintf("P%03d", 1:100))
@@ -133,6 +150,8 @@ test_that("Handles optional without_buprenorphine columns", {
 })
 
 test_that("Empty results are handled correctly", {
+  withr::local_options(lifecycle_verbosity = "quiet")
+  
   # Create test data with empty result (no matching medications)
   test_data <- data.frame(
     patient_id = character(0),
