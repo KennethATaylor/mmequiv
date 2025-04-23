@@ -8,12 +8,12 @@
 #'     and 2) opioids with buprenorphine.
 #'     
 #' @details
-#' `calculate_mme()` and `calculate_mme_local()` produce the same calculation 
-#' results with and without using the API, respectively. This helps overcome the
-#' online calculator API rate limit of 50 (patient-level) requests per 15 
-#' minutes. In addition to returning user-specified arguments, `calculate_mme()` 
-#' also returns several  other variables mentioned in the **Description** 
-#' section, which are described in more detail below. Output variable 
+#' The function will provide the same results regardless of whether the user has
+#' specified they want calculation done using the API (`use_api`). Specifying 
+#' `use_api == FALSE` helps overcome the online calculator API rate limit of 50 
+#' (patient-level) requests per 15  minutes. In addition to returning 
+#' user-specified arguments, `calculate_mme()` also returns several  other 
+#' variables mentioned in the **Description** section. Output variable 
 #' description details are below; see 
 #' [Adams, *et al*. (2025)](https://www.doi.org/10.1097/j.pain.0000000000003529)
 #' for a comprehensive overview.
@@ -192,14 +192,18 @@
 #'  * `days_of_medication`: a positive number indicating the duration of the 
 #'      opioid medication prescription listed in the associated 
 #'      `medication_name` in days.
+#' @param use_api logical; indicates whether to use the NIH HEAL Online MME 
+#'     Calculator API (default) to perform calculations or perform them locally 
+#'     instead. Setting to `FALSE` allows the user to perform the same 
+#'     calculations without being restricted by the API rate limit of 50 
+#'     patient calculations per 15 minutes and also allows the user to perform
+#'     the calculations without relying on internet access.
 #'
 #' @returns
-#' A list of MME calculations from the API. Will error if any medications are invalid
-#'     or if any numeric parameters are not positive numbers.
+#' A list of MME calculations. Will error if any medications are invalid or if 
+#'     any numeric parameters are not positive numbers.
 #'
 #' @export
-#' 
-#' @seealso [calculate_mme_df()] which this function wraps.
 #' 
 #' @examples
 #' meds_list <- list(
@@ -217,13 +221,15 @@
 #'     )
 #' )
 #' 
+#' # Using API
 #' calculate_mme(10, 5, meds_list)
+#' 
+#' # Not using API
+#' calculate_mme(10, 5, meds_list, use_api = FALSE)
 #' 
 #' # Clean up meds_list
 #' rm(meds_list)
-calculate_mme <- function(therapy_days, observation_window_days, medications) {
-  # Base URL for the API
-  base_url <- "https://research-mme.wakehealth.edu/api"
+calculate_mme <- function(therapy_days, observation_window_days, medications, use_api = TRUE) {
   
   # Validate inputs
   # ------ Input validation for therapy_days ------
@@ -291,7 +297,7 @@ calculate_mme <- function(therapy_days, observation_window_days, medications) {
     cli::cli_abort(c(
       "The {.arg medications} argument must be a {.cls list}",
       "x" = "You've supplied a {.cls {class(medications)}}"
-      ))
+    ))
   }
   
   # Use the internal package data with saved med list
@@ -308,7 +314,7 @@ calculate_mme <- function(therapy_days, observation_window_days, medications) {
       cli::cli_abort(c(
         "Element {i} in {.arg medications} must be a {.cls list}",
         "x" = "You've supplied a {.cls {class(med)}}"
-        ))
+      ))
     }
     
     # Check for required fields
@@ -326,7 +332,7 @@ calculate_mme <- function(therapy_days, observation_window_days, medications) {
       cli::cli_abort(c(
         "Element {i} in {.arg medications}: {.field medication_name} {.val {med$medication_name}} is not a medication name accepted by the API",
         "i" = "Run {.fn get_med_list} to see the list of {.field medication_name}s accepted by the API"
-        ))
+      ))
     }
     
     if (!is.numeric(med$dose) || length(med$dose) != 1 || med$dose <= 0) {
@@ -341,31 +347,151 @@ calculate_mme <- function(therapy_days, observation_window_days, medications) {
       cli::cli_abort("Element {i} in {.arg medications}: {.field days_of_medication} must be a positive number")
     }
   }
-
-  # Create the payload structure
-  payload <- list(
-    therapy_obs_window_with = list(
-      therapy_days = therapy_days_with,
-      observation_window_days = observation_window_days_with
-    ),
-    therapy_obs_window_without = list(
-      therapy_days = therapy_days_without,
-      observation_window_days = observation_window_days_without
-    ),
-    medications = medications
-  )
-
-  req <- httr2::request(glue::glue("{base_url}/mme_definitions")) |>
-    httr2::req_headers(
-      accept = "application/json",
-      "Content-Type" = "application/json"
+  
+  if(!is_logical(use_api)) {
+    cli::cli_abort("{.arg use_api} must be either {.code TRUE} or {.code FALSE}")
+  }
+  
+  if (use_api) {
+    
+    # Ensure computer is online for API use
+    if (!httr2::is_online()) {
+      cli::cli_abort(c(
+        "You aren't connected to the internet, which means you can't use the API",
+        "i" = "Set {.arg use_api} to {.code FALSE} to calculate MME locally instead"
+        ))
+    }
+    
+    # Base URL for the API
+    base_url <- "https://research-mme.wakehealth.edu/api"
+    
+    # Create the payload structure
+    payload <- list(
+      therapy_obs_window_with = list(
+        therapy_days = therapy_days_with,
+        observation_window_days = observation_window_days_with
+      ),
+      therapy_obs_window_without = list(
+        therapy_days = therapy_days_without,
+        observation_window_days = observation_window_days_without
+      ),
+      medications = medications
+    )
+    
+    req <- httr2::request(glue::glue("{base_url}/mme_definitions")) |>
+      httr2::req_headers(
+        accept = "application/json",
+        "Content-Type" = "application/json"
       ) |>
-    httr2::req_body_json(payload) |>
-    mmequiv_req_retry()
+      httr2::req_body_json(payload) |>
+      mmequiv_req_retry()
+    
+    resp <- req |>
+      httr2::req_perform()
+    
+    resp |>
+      httr2::resp_body_json(simplifyVector = TRUE)
+    
+  } else {
+    
+    # Get conversion factors from internal package data
+    cf_lookup <- stats::setNames(med_list$cf, med_list$med_name)
+    
+    # Calculate per-medication stats
+    processed_meds <- lapply(medications, function(med) {
+      # Get conversion factor for this medication
+      factor <- cf_lookup[med$medication_name]
+      
+      # Calculate MMEs
+      single_day_mme <- med$dose * med$doses_per_24_hours * factor
+      mme <- single_day_mme * med$days_of_medication
+      
+      # Add calculated fields to the medication
+      med$factor <- as.numeric(factor)
+      med$mme <- as.numeric(mme)
+      med$single_day_mme <- as.numeric(single_day_mme)
+      return(med)
+    })
+    
+    # Convert medications list to data frame for easier processing
+    meds_df <- do.call(rbind, lapply(processed_meds, function(x) {
+      data.frame(
+        medication_name = x$medication_name,
+        dose = x$dose,
+        doses_per_24_hours = x$doses_per_24_hours,
+        days_of_medication = x$days_of_medication,
+        factor = x$factor,
+        mme = x$mme,
+        single_day_mme = x$single_day_mme,
+        stringsAsFactors = FALSE
+      )
+    }))
+    
+    # Identify buprenorphine medications
+    is_bupr <- grepl("buprenorphine", tolower(meds_df$medication_name), ignore.case = TRUE)
+    
+    # Calculate aggregates with buprenorphine
+    total_mme_with <- sum(meds_df$mme)
+    total_days_with <- sum(meds_df$days_of_medication)
+    
+    # Calculate MME definitions with buprenorphine
+    mme1_with <- total_mme_with / total_days_with
+    mme2_with <- total_mme_with / therapy_days_with
+    mme3_with <- total_mme_with / observation_window_days_with
+    mme4_with <- sum(meds_df$single_day_mme)
+    
+    # Calculate aggregates without buprenorphine (exclude buprenorphine meds)
+    if (any(is_bupr)) {
+      meds_df_no_bupr <- meds_df[!is_bupr, ]
+      total_mme_without <- sum(meds_df_no_bupr$mme)
+      total_days_without <- sum(meds_df_no_bupr$days_of_medication)
+      mme4_without <- sum(meds_df_no_bupr$single_day_mme)
+    } else {
+      # If no buprenorphine meds, results are the same
+      total_mme_without <- total_mme_with
+      total_days_without <- total_days_with
+      mme4_without <- mme4_with
+    }
+    
+    # Calculate MME definitions without buprenorphine
+    mme1_without <- total_mme_without / total_days_without
+    mme2_without <- total_mme_without / therapy_days_without
+    mme3_without <- total_mme_without / observation_window_days_without
+    
+    # Create a response object that matches API response structure exactly
+    result <- list(
+      message = "Processed medications (local calculation)",
+      therapy_obs_window_with = list(
+        therapy_days = therapy_days_with,
+        observation_window_days = observation_window_days_with
+      ),
+      therapy_obs_window_without = list(
+        therapy_days = therapy_days_without,
+        observation_window_days = observation_window_days_without
+      ),
+      medications = meds_df,
+      mme_definitions = list(
+        with_buprenorphine = data.frame(
+          total_mme = total_mme_with,
+          total_days = total_days_with,
+          mme1 = mme1_with,
+          mme2 = mme2_with,
+          mme3 = mme3_with,
+          mme4 = mme4_with
+        ),
+        without_buprenorphine = data.frame(
+          total_mme = total_mme_without,
+          total_days = total_days_without,
+          mme1 = ifelse(is.nan(mme1_without), NA_real_, mme1_without),
+          mme2 = mme2_without,
+          mme3 = mme3_without,
+          mme4 = mme4_without
+        )
+      )
+    )
+    
+    return(result)
+    
+  }
   
-  resp <- req |>
-    httr2::req_perform()
-  
-  resp |>
-    httr2::resp_body_json(simplifyVector = TRUE)
 }

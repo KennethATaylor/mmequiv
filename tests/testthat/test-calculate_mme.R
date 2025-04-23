@@ -258,3 +258,87 @@ test_that("Validates medication names against known list", {
     calculate_mme(10, 5, invalid_medication)
   )
 })
+
+test_that("Local MME calculation matches API calculation", {
+  # Define test input
+  meds_list <- list(
+    list(
+      medication_name = "Buprenorphine buccal film (mcg) buccal",
+      dose = 50,
+      doses_per_24_hours = 2,
+      days_of_medication = 5
+    ),
+    list(
+      medication_name = "Hydrocodone (mg)",
+      dose = 75,
+      doses_per_24_hours = 3,
+      days_of_medication = 10
+    )
+  )
+  
+  # Get results from both methods
+  # Use with_mock_dir for API call to avoid rate limit during testing
+  httptest2::with_mock_dir("calculate_mme_use_api", {
+    api_result <- calculate_mme(10, 5, meds_list, use_api = TRUE)
+  })
+  
+  local_result <- calculate_mme(10, 5, meds_list, use_api = FALSE)
+  
+  # Test overall structure is the same
+  expect_identical(names(api_result), names(local_result))
+  
+  # Check calculation-specific fields
+  expect_equal(api_result$therapy_obs_window_with, local_result$therapy_obs_window_with)
+  expect_equal(api_result$therapy_obs_window_without, local_result$therapy_obs_window_without)
+  
+  # Check medication data
+  # Note: We use expect_equal with tolerance for numeric comparisons
+  api_meds <- api_result$medications
+  local_meds <- local_result$medications
+  
+  # Sort by medication_name to ensure consistent order
+  if (is.data.frame(api_meds)) {
+    api_meds <- api_meds[order(api_meds$medication_name), ]
+  } else {
+    api_meds_names <- sapply(api_meds, function(x) x$medication_name)
+    api_meds <- api_meds[order(api_meds_names)]
+  }
+  
+  if (is.data.frame(local_meds)) {
+    local_meds <- local_meds[order(local_meds$medication_name), ]
+  } else {
+    local_meds_names <- sapply(local_meds, function(x) x$medication_name)
+    local_meds <- local_meds[order(local_meds_names)]
+  }
+  
+  # Test medication calculations with tolerance
+  expect_equal(api_meds$factor, local_meds$factor, tolerance = 1e-6)
+  expect_equal(api_meds$mme, local_meds$mme, tolerance = 1e-6)
+  expect_equal(api_meds$single_day_mme, local_meds$single_day_mme, tolerance = 1e-6)
+  
+  # Check MME definitions
+  api_mme_with <- api_result$mme_definitions$with_buprenorphine
+  local_mme_with <- local_result$mme_definitions$with_buprenorphine
+  
+  api_mme_without <- api_result$mme_definitions$without_buprenorphine
+  local_mme_without <- local_result$mme_definitions$without_buprenorphine
+  
+  # Test MME calculations with tolerance
+  mme_fields <- c("total_mme", "total_days", "mme1", "mme2", "mme3", "mme4")
+  
+  for (field in mme_fields) {
+    expect_equal(
+      as.numeric(api_mme_with[[field]]), 
+      as.numeric(local_mme_with[[field]]), 
+      tolerance = 1e-6,
+      info = paste("with_buprenorphine", field)
+    )
+    
+    expect_equal(
+      as.numeric(api_mme_without[[field]]), 
+      as.numeric(local_mme_without[[field]]), 
+      tolerance = 1e-6,
+      info = paste("without_buprenorphine", field)
+    )
+  }
+})

@@ -1,0 +1,53 @@
+{
+    "message": "Processed medications",
+    "therapy_obs_window_with": {
+        "therapy_days": 7,
+        "observation_window_days": 14
+    },
+    "therapy_obs_window_without": {
+        "therapy_days": 7,
+        "observation_window_days": 14
+    },
+    "medications": [
+        {
+            "medication_name": "Hydrocodone (mg)",
+            "dose": 10,
+            "doses_per_24_hours": 4,
+            "days_of_medication": 7,
+            "factor": 1,
+            "mme": 280,
+            "single_day_mme": 40
+        },
+        {
+            "medication_name": "Oxycodone (mg)",
+            "dose": 5,
+            "doses_per_24_hours": 2,
+            "days_of_medication": 5,
+            "factor": 1.5,
+            "mme": 75,
+            "single_day_mme": 15
+        }
+    ],
+    "mme_definitions": {
+        "with_buprenorphine": [
+            {
+                "total_mme": 355,
+                "total_days": 12,
+                "mme1": 29.583333333333332,
+                "mme2": 50.714285714285715,
+                "mme3": 25.357142857142858,
+                "mme4": 55
+            }
+        ],
+        "without_buprenorphine": [
+            {
+                "total_mme": 355,
+                "total_days": 12,
+                "mme1": 29.583333333333332,
+                "mme2": 50.714285714285715,
+                "mme3": 25.357142857142858,
+                "mme4": 55
+            }
+        ]
+    }
+}
