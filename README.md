@@ -18,15 +18,14 @@ The goal of `mmequiv` is to provide users the ability to calculate
 standardized Morphine Milligram Equivalent (MME) doses for prescription
 opioid medications for research purposes.
 
-`mmequiv`’s API wrapper functions takes information about prescription
-opioids used by study participants and directly interfaces with the [NIH
-HEAL MME Online Calculator](https://research-mme.wakehealth.edu/) API
-from R to calculate MME and daily MME based on several standardized
-definitions. Because the NIH HEAL MME Online Calculator API has a rate
-limit of 50 requests per 15 minutes, `mmequiv` also provides functions
-that perform the same calculations locally without needing to call the
-API when the user has large data sets (or when the user may not have
-access to the internet).
+`mmequiv` uses information about prescription opioids used by study
+participants to calculate MME and daily MME based on several
+standardized definitions, directly interfacing with the [NIH HEAL MME
+Online Calculator](https://research-mme.wakehealth.edu/) API from R.
+Because the NIH HEAL MME Online Calculator API has a rate limit of 50
+(patient-level) requests per 15 minutes, `mmequiv` can also perform the
+same calculations locally without needing to call the API when working
+with larger data or when internet access is unavailable.
 
 `mmequiv` is intended for the same purposes as the NIH HEAL MME Online
 Calculator - as a data resource for: research, analytical purposes using

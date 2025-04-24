@@ -2,6 +2,9 @@ url: https://kennethataylor.github.io/mmequiv/
 
 home:
   title: R Interface to the NIH HEAL Morphine Milligram Equivalent API
+  
+development:
+  mode: auto
 
 repo:
   url:
