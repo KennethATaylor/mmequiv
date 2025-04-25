@@ -242,6 +242,8 @@ calculate_mme <- function(x,
 #' @export
 #' 
 #' @examples
+#' # Recreating example from Adams MCB, et al. 2025 supplement
+#' #     https://links.lww.com/PAIN/C213
 #' meds_list <- list(
 #'   list(
 #'     medication_name = "Morphine (mg)",
@@ -258,10 +260,10 @@ calculate_mme <- function(x,
 #' )
 #' 
 #' # Using API
-#' calculate_mme(meds_list, 10, 5)
+#' calculate_mme(meds_list, 30, 90)
 #' 
 #' # Not using API
-#' calculate_mme(meds_list, 10, 5, use_api = FALSE)
+#' calculate_mme(meds_list, 30, 90, use_api = FALSE)
 #' 
 #' # Clean up meds_list
 #' rm(meds_list)
