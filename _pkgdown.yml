@@ -1,7 +1,7 @@
 url: https://kennethataylor.github.io/mmequiv/
 
 home:
-  title: R Interface to the NIH HEAL Morphine Milligram Equivalent API
+  title: Calculate Standardized Morphine Milligram Equivalent Doses
   
 development:
   mode: auto
