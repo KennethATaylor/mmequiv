@@ -81,13 +81,13 @@ mme <- calculate_mme_df(
   therapy_days_without_col = "therapy_days_without",
   observation_days_without_col = "observation_window_days_without"
   )
-# -> 
+# ->
 mme <- calculate_mme(
   x = opioid_trial |> dplyr::filter(patient_id \%in\% sprintf("P\%03d", 1:100)),
   therapy_days_without_col = "therapy_days_without",
   observation_days_without_col = "observation_window_days_without"
   )
-  
+
 head(mme$medications)
 
 head(mme$patient_summary_with_buprenorphine)

@@ -55,8 +55,11 @@ opioid_trial <- tibble(
 
 # Common opioids that should appear more frequently
 common_opioids <- c(
-  "Hydrocodone (mg)", "Oxycodone (mg)", "Morphine (mg)",
-  "tramadol (mg)", "Codeine (mg)"
+  "Hydrocodone (mg)",
+  "Oxycodone (mg)",
+  "Morphine (mg)",
+  "tramadol (mg)",
+  "Codeine (mg)"
 )
 
 # Generate 1000 patients
@@ -65,22 +68,27 @@ n_patients <- 1000
 for (pid in 1:n_patients) {
   # Determine number of medications for this patient (1-5)
   n_meds <- sample(1:5, 1, prob = c(0.3, 0.3, 0.2, 0.1, 0.1))
-  
+
   # Weight common opioids to appear more frequently
   weights <- rep(1, length(medications))
   common_indices <- match(common_opioids, medications)
   common_indices <- common_indices[!is.na(common_indices)]
   weights[common_indices] <- 5
-  
+
   # Sample medications for this patient
-  med_indices <- sample(1:length(medications), n_meds, prob = weights, replace = FALSE)
+  med_indices <- sample(
+    1:length(medications),
+    n_meds,
+    prob = weights,
+    replace = FALSE
+  )
   patient_meds <- medications[med_indices]
-  
+
   # Generate data for each medication
   for (med in patient_meds) {
     # Get appropriate dose range
     range <- dose_ranges[[med]]
-    
+
     # Generate dose based on medication type
     if (grepl("mcg", med) && !grepl("patch", med)) {
       # For mcg medications that aren't patches, use multiples of 50 or 100
@@ -89,56 +97,69 @@ for (pid in 1:n_patients) {
     } else if (grepl("patch", med)) {
       # For patches, use standard increments
       possible_doses <- c(5, 7.5, 10, 12.5, 15, 20, 25, 30, 37.5, 50, 75, 100)
-      possible_doses <- possible_doses[possible_doses >= range[1] & possible_doses <= range[2]]
+      possible_doses <- possible_doses[
+        possible_doses >= range[1] & possible_doses <= range[2]
+      ]
       dose <- sample(possible_doses, 1)
     } else {
       # For mg medications, use appropriate increments
-      by_val <- if (max(range) <= 10) 2.5 else if (max(range) <= 30) 5 else if (max(range) <= 100) 10 else 25
+      by_val <- if (max(range) <= 10) 2.5 else if (max(range) <= 30) 5 else if (
+        max(range) <= 100
+      )
+        10 else 25
       possible_doses <- seq(range[1], range[2], by = by_val)
       dose <- sample(possible_doses, 1)
     }
-    
+
     # Generate doses per day (frequency)
     doses_per_day <- if (grepl("LA|patch", med)) {
-      sample(c(1, 2), 1, prob = c(0.7, 0.3))  # LA meds usually once or twice daily
+      sample(c(1, 2), 1, prob = c(0.7, 0.3)) # LA meds usually once or twice daily
     } else {
-      sample(1:4, 1, prob = c(0.1, 0.3, 0.4, 0.2))  # Regular meds 1-4 times daily
+      sample(1:4, 1, prob = c(0.1, 0.3, 0.4, 0.2)) # Regular meds 1-4 times daily
     }
-    
+
     # Generate days of medication
     days <- if (grepl("LA|patch", med)) {
-      sample(c(7, 14, 28, 30, 60, 90), 1, prob = c(0.1, 0.2, 0.3, 0.2, 0.1, 0.1))
+      sample(
+        c(7, 14, 28, 30, 60, 90),
+        1,
+        prob = c(0.1, 0.2, 0.3, 0.2, 0.1, 0.1)
+      )
     } else {
       sample(c(3, 5, 7, 10, 14, 30), 1, prob = c(0.1, 0.1, 0.3, 0.2, 0.2, 0.1))
     }
-    
+
     # Calculate observation and therapy days
     observation_window_days <- max(30, round(days * 1.5))
     therapy_days <- days
-    
+
     # For patients with buprenorphine, create separate without_buprenorphine values
     has_buprenorphine <- any(grepl("Buprenorphine", patient_meds))
-    
+
     if (has_buprenorphine) {
       therapy_days_without <- max(1, therapy_days - sample(1:5, 1))
-      observation_window_days_without <- max(therapy_days_without, observation_window_days - sample(1:10, 1))
+      observation_window_days_without <- max(
+        therapy_days_without,
+        observation_window_days - sample(1:10, 1)
+      )
     } else {
       therapy_days_without <- therapy_days
       observation_window_days_without <- observation_window_days
     }
-    
+
     # Add a row to the result
-    opioid_trial <- opioid_trial %>% add_row(
-      patient_id = paste0("P", sprintf("%03d", pid)),
-      medication_name = med,
-      dose = dose,
-      doses_per_24_hours = doses_per_day,
-      days_of_medication = days,
-      therapy_days = therapy_days,
-      observation_window_days = observation_window_days,
-      therapy_days_without = therapy_days_without,
-      observation_window_days_without = observation_window_days_without
-    )
+    opioid_trial <- opioid_trial %>%
+      add_row(
+        patient_id = paste0("P", sprintf("%03d", pid)),
+        medication_name = med,
+        dose = dose,
+        doses_per_24_hours = doses_per_day,
+        days_of_medication = days,
+        therapy_days = therapy_days,
+        observation_window_days = observation_window_days,
+        therapy_days_without = therapy_days_without,
+        observation_window_days_without = observation_window_days_without
+      )
   }
 }
 
@@ -146,8 +167,8 @@ for (pid in 1:n_patients) {
 # head(opioid_trial)
 
 # Count rows per medication type
-# med_counts <- opioid_trial %>% 
-#   count(medication_name) %>% 
+# med_counts <- opioid_trial %>%
+#   count(medication_name) %>%
 #   arrange(desc(n))
 # print(med_counts)
 

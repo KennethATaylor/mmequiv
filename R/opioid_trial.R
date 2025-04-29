@@ -1,6 +1,6 @@
 #' Opioid Trial Data
 #'
-#' Example (synthetic) data provided as an example of long format data to use 
+#' Example (synthetic) data provided as an example of long format data to use
 #'     with `calculate_mme_df()`.
 #'
 #' @format ## `opioid_trial`
