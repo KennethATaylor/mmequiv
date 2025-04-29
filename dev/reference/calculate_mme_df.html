@@ -152,13 +152,13 @@ excluding buprenorphine</p></li>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span class="warning">Warning: </span>`calculate_mme_df()` was deprecated in mmequiv 0.2.0.</span>
 <span class="r-wrn co"><span class="r-pr">#&gt;</span> <span style="color: #00BBBB;">ℹ</span> Please use `calculate_mme()` instead.</span>
-<span class="r-in"><span><span class="co"># -&gt; </span></span></span>
+<span class="r-in"><span><span class="co"># -&gt;</span></span></span>
 <span class="r-in"><span><span class="va">mme</span> <span class="op">&lt;-</span> <span class="fu"><a href="calculate_mme.html">calculate_mme</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  x <span class="op">=</span> <span class="va">opioid_trial</span> <span class="op">|&gt;</span> <span class="fu">dplyr</span><span class="fu">::</span><span class="fu"><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">filter</a></span><span class="op">(</span><span class="va">patient_id</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/sprintf.html" class="external-link">sprintf</a></span><span class="op">(</span><span class="st">"P%03d"</span>, <span class="fl">1</span><span class="op">:</span><span class="fl">100</span><span class="op">)</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  therapy_days_without_col <span class="op">=</span> <span class="st">"therapy_days_without"</span>,</span></span>
 <span class="r-in"><span>  observation_days_without_col <span class="op">=</span> <span class="st">"observation_window_days_without"</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
-<span class="r-in"><span>  </span></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">mme</span><span class="op">$</span><span class="va">medications</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;"># A tibble: 6 × 12</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   patient_id medication_name          dose doses_per_24_hours days_of_medication</span>
