@@ -232,7 +232,7 @@ calculate_mme_local <- function(
   medications
 ) {
   lifecycle::deprecate_warn(
-    "0.2.0",
+    "1.0.0",
     "calculate_mme_local()",
     details = "Please use `calculate_mme(use_api = FALSE)` instead"
   )

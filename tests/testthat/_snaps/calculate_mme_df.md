@@ -4,7 +4,7 @@
       calculate_mme_df(data = test_data)
     Condition
       Warning:
-      `calculate_mme_df()` was deprecated in mmequiv 0.2.0.
+      `calculate_mme_df()` was deprecated in mmequiv 1.0.0.
       i Please use `calculate_mme()` instead.
     Output
       $medications

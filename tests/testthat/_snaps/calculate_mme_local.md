@@ -4,7 +4,7 @@
       calculate_mme_local(10, 5, meds_list)
     Condition
       Warning:
-      `calculate_mme_local()` was deprecated in mmequiv 0.2.0.
+      `calculate_mme_local()` was deprecated in mmequiv 1.0.0.
       i Please use `calculate_mme(use_api = FALSE)` instead
     Output
       $message
