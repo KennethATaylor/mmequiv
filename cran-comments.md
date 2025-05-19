@@ -1,11 +1,7 @@
-## Resubmission
-
-This is a resubmission. In this version I have:
-
-* Removed "+ file LICENSE" from the DESCRIPTION and the file itself to align with GPL-3 license.
-
 ## R CMD check results
 
-0 errors | 0 warnings | 1 note
+0 errors | 0 warnings | 0 notes
 
-* This is a new release.
+## revdepcheck results
+
+* There are currently no downstream dependencies for this package

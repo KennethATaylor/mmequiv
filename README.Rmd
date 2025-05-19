@@ -33,7 +33,7 @@ The goal of `mmequiv` is to provide users the ability to calculate standardized 
 
 > The data collection tool is ***NOT*** intended for any clinical decision-making by clinicians while prescribing opioids. The MME conversion factors in this survey ***DO NOT*** constitute any clinical guidance for prescribing or recommendations for converting patients from one form of opioid analgesic to another.
 
-Much of the information in `mmequiv`'s documentation is pulled directly from either the NIH HEAL MME Online Calculator website or the paper from the calculator's creators.[^2] I recommend reviewing these resources for any details not covered by the package documentation.
+Much of the information in the `mmequiv` documentation is pulled directly from either the NIH HEAL MME Online Calculator website or the paper from the calculator's creators.[^2] I recommend reviewing these resources for any details not covered by the package documentation.
 
 [^2]: Adams MCB, Sward KA, Perkins ML, Hurley RW. Standardizing research methods for opioid dose comparison: the NIH HEAL morphine milligram equivalent calculator. *PAIN*. Published online February 3, 2025. doi:  [10.1097/j.pain.0000000000003529](https://doi.org/10.1097/j.pain.0000000000003529){.uri}
 

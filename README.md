@@ -44,10 +44,10 @@ the NIH HEAL MME Online Calculator - these also apply to `mmequiv`:
 > guidance for prescribing or recommendations for converting patients
 > from one form of opioid analgesic to another.
 
-Much of the information in `mmequiv`’s documentation is pulled directly
-from either the NIH HEAL MME Online Calculator website or the paper from
-the calculator’s creators.[^2] I recommend reviewing these resources for
-any details not covered by the package documentation.
+Much of the information in the `mmequiv` documentation is pulled
+directly from either the NIH HEAL MME Online Calculator website or the
+paper from the calculator’s creators.[^2] I recommend reviewing these
+resources for any details not covered by the package documentation.
 
 ## Installation
 
