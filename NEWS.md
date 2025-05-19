@@ -1,4 +1,4 @@
-# mmequiv (development version)
+# mmequiv 1.0.0
 
 * `calculate_mme.data.frame()` and `calculate_mme.tbl_df()` now allow users
     to specify `use_api` and includes informative warnings about the API 

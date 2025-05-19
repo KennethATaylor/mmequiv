@@ -1,6 +1,6 @@
 Package: mmequiv
 Title: Calculate Standardized Morphine Milligram Equivalent Doses
-Version: 0.1.1.9000
+Version: 1.0.0
 Authors@R: 
     person("Kenneth A.", "Taylor", , 
     "kenneth.taylor.dpt@gmail.com", 
